@@ -29,68 +29,71 @@
 <!-- ============ PÁGINAS ============ -->
 <main id="contenido">
 
-  <!-- ===== INICIO ===== -->
+  <!-- ===== INICIO (PANEL ÚNICO) ===== -->
   <section id="page-inicio" class="page">
     <a class="sos-grande" href="tel:123">
       <span class="sos-num">123</span>
-      <span class="sos-label">LLAMAR AHORA<br>Emergencias nacionales</span>
+      <span class="sos-label">LLAMAR AHORA · Emergencias</span>
     </a>
-    <p class="caption">Policía, ambulancia y bomberos. Toca y llama.</p>
 
-    <div class="fila-botones">
-      <button id="btnEstoyBien" class="accion verde">✅ Estoy bien</button>
-      <button id="btnNecesitoAyuda" class="accion rojo">🆘 Necesito ayuda</button>
-    </div>
-    <button id="btnEmergencia" class="emergencia-falsa" aria-label="Botón de emergencia: avisar a tus contactos con tu ubicación">
-      <span class="ef-num">🆘</span>
-      <span class="ef-txt">AVISAR A MIS CONTACTOS<br><small>con mi ubicación GPS</small></span>
-    </button>
-    <p class="caption">Elige a quién: mamá, tu pareja, un vecino. Saldrá con tu ubicación.</p>
+    <div class="panel" id="panelInicio">
 
-    <h2 class="titulo-seccion">🚨 SOS en vivo</h2>
-    <div class="tarjeta sosvivo-caja" id="sosVivoCaja">
-      <p class="nota" id="sosVivoIntro">Actívalo cuando estés en peligro REAL: suena una alarma que no para, tu ubicación se actualiza sola y el aviso sale a TODOS tus contactos. No necesitas escribir.</p>
-      <p class="sv-label">¿Qué te está pasando?</p>
-      <div class="sv-chips" id="svChips"><!-- lo llena app.js --></div>
-      <button id="btnSosVivo" class="sosvivo-activar">🔴 ACTIVAR SOS EN VIVO</button>
-      <div id="svPanel" class="oculto">
-        <div class="sv-estado">
-          <span class="sv-punto"></span>
-          <strong>SOS ACTIVO</strong>
-          <span id="svTipo"></span>
+      <div class="p-bloque">
+        <div class="fila-botones">
+          <button id="btnEstoyBien" class="accion verde">✅ Estoy bien</button>
+          <button id="btnNecesitoAyuda" class="accion rojo">🆘 Necesito ayuda</button>
         </div>
-        <p class="sv-ubic" id="svUbicacion">📡 Buscando GPS…</p>
-        <p class="sv-sirena" id="svAvisoSirena">🔊 Alarma sonando. Toca DETENER cuando estés a salvo.</p>
-        <p class="sv-cola-titulo" id="svColaTitulo">El aviso se está enviando a tus contactos. Toca cada uno para completarlo:</p>
-        <div id="svCola"><!-- lo llena app.js --></div>
-        <button id="btnDetenerSos" class="sosvivo-detener">⏹ DETENER SOS</button>
+        <p class="p-nota">WhatsApp o SMS, con tu ubicación.</p>
       </div>
-    </div>
-    <p class="caption">Avisa a tus contactos por WhatsApp o SMS, con tu ubicación. El SMS sirve sin internet.</p>
 
-    <h2 class="titulo-seccion">📍 Mi ubicación (sin internet)</h2>
-    <div class="tarjeta">
-      <div id="ubicCoords" class="ubic-coords">Toca "Ver mi ubicación"</div>
+      <button id="btnEmergencia" class="p-fila" aria-label="Avisar a mis contactos con mi ubicación">
+        <span class="p-ico rojo">🆘</span>
+        <span class="p-txt"><strong>Avisar a mis contactos</strong><small>elige a quién, con tu ubicación</small></span>
+        <span class="p-flecha">›</span>
+      </button>
+
+      <div class="p-bloque" id="pSosVivo">
+        <p class="p-sub">SOS en vivo — si no puedes escribir</p>
+        <div class="sv-chips" id="svChips"></div>
+        <button id="btnSosVivo" class="sosvivo-activar">🔴 ACTIVAR SOS EN VIVO</button>
+        <div id="svPanel" class="oculto">
+          <div class="sv-estado"><span class="sv-punto"></span><strong>SOS ACTIVO</strong><span id="svTipo"></span></div>
+          <p class="sv-ubic" id="svUbicacion">📡 Buscando GPS…</p>
+          <p class="sv-sirena" id="svAvisoSirena">🔊 Alarma sonando. Toca DETENER cuando estés a salvo.</p>
+          <div id="svCola"></div>
+          <button id="btnDetenerSos" class="sosvivo-detener">⏹ DETENER SOS</button>
+        </div>
+      </div>
+
+      <button id="btnFicha" class="p-fila">
+        <span class="p-ico azul">🏥</span>
+        <span class="p-txt"><strong>Ficha médica</strong><small>sangre, alergias, contacto — por si no puedes hablar</small></span>
+        <span class="p-flecha">›</span>
+      </button>
+
+      <button id="btnUbicacion" class="p-fila">
+        <span class="p-ico oro">📍</span>
+        <span class="p-txt"><strong>Mi ubicación</strong><small id="pUbicMini">GPS sin internet · copiar coordenadas</small></span>
+        <span class="p-flecha">›</span>
+      </button>
+      <div id="ubicCoords" class="ubic-coords oculto"></div>
       <div id="ubicPrecision" class="ubic-precision"></div>
-      <div class="fila-botones">
-        <button id="btnUbicacion" class="accion azul">📡 Ver mi ubicación</button>
-        <button id="btnCopiarUbic" class="accion verde oculto">📋 Copiar</button>
+      <div class="fila-botones oculto" id="pUbicBotones">
+        <button id="btnCopiarUbic" class="accion verde">📋 Copiar coordenadas</button>
       </div>
+
+      <div class="p-bloque">
+        <p class="p-sub">Acceso rápido</p>
+        <div class="grid-accesos" id="accesosRapidos"></div>
+      </div>
+
+      <button id="btnCompartir" class="p-fila">
+        <span class="p-ico whats">💬</span>
+        <span class="p-txt"><strong>Compartir la guía</strong><small>guárdala y envíala, puede salvar vidas</small></span>
+        <span class="p-flecha">›</span>
+      </button>
+
     </div>
-    <p class="caption">El GPS funciona sin datos. Cópialas y mándalas por SMS o díctaselas a quien te rescate.</p>
-
-    <h2 class="titulo-seccion">🏥 Tu ficha médica</h2>
-    <button id="btnFicha" class="accion azul">🏥 Ver mi ficha médica</button>
-    <p class="caption">Tu sangre, alergias y a quién llamar — por si no puedes hablar. Se llena en <strong>Más</strong>.</p>
-
-    <h2 class="titulo-seccion">Acceso rápido</h2>
-    <div class="grid-accesos" id="accesosRapidos">
-      <!-- lo llena app.js -->
-    </div>
-
-    <h2 class="titulo-seccion">Comparte esta guía</h2>
-    <button id="btnCompartir" class="accion whatsapp">💬 Compartir (puede salvar vidas)</button>
-    <p class="caption">Mándasela a tu familia: funciona sin internet y no pesa.</p>
   </section>
 
   <!-- ===== EMERGENCIAS ===== -->
