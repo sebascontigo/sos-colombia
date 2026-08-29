@@ -9,7 +9,7 @@ const DATOS = {
 
   app: {
     nombre: "SOS Colombia",
-    version: "3.3.0",
+    version: "3.4.0",
     actualizado: "2026-08-27",
     descripcion: "Guía de emergencia y ayuda comunitaria para Colombia. Gratis, sin internet y sin recolectar datos."
   },
@@ -198,6 +198,7 @@ const DATOS = {
       ubicacion: "📍 Ubicación en vivo (se actualiza sola): ",
       buscando: "📡 Buscando GPS…",
       sinGPS: "Sin señal GPS aún. Si puedes, sal a un espacio abierto.",
+      gpsBloqueada: "🔒 Ubicación BLOQUEADA para esta app.<br><b>Desbloquéala así:</b> toca el candado 🔒 de la barra de direcciones → Permisos → Ubicación → <b>Permitir</b>. La app reintenta sola cada 15 segundos.",
       avisoSirena: "🔊 Alarma sonando. Toca DETENER cuando estés a salvo.",
       cabeza: "El aviso se está enviando a tus contactos. Toca cada uno para completarlo:"
     },
