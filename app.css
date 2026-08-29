@@ -21,7 +21,7 @@
   --borde:rgba(255,255,255,.08);
   --sombra:0 6px 18px rgba(0,0,0,.35);
   --radio:18px;
-  --fs:15px;
+  --fs:14px;
 }
 
 /* ---- MODO CLARO (para exteriores / plena luz) ---- */
@@ -97,7 +97,7 @@ body.claro #topbar{
   box-shadow:0 4px 14px rgba(192,57,43,.45), inset 0 1px 0 rgba(255,255,255,.25);
 }
 .topbar-text{flex:1; line-height:1.15}
-.topbar-text strong{font-family:Georgia,"Charter","Times New Roman",serif; font-size:1.12rem; letter-spacing:.3px}
+.topbar-text strong{font-size:1rem; letter-spacing:.3px}
 .topbar-text small{display:block; font-size:.74rem; color:var(--texto-suave)}
 .icon-btn{
   background:rgba(255,255,255,.08); color:var(--texto);
@@ -118,10 +118,10 @@ body.claro .icon-btn{background:rgba(20,32,46,.05)}
 
 /* títulos de sección con barra dorada */
 .titulo-seccion{
-  display:flex; align-items:center; gap:10px;
-  font-family:Georgia,"Charter","Times New Roman",serif;
-  font-size:1.12rem; font-weight:700; letter-spacing:.2px;
-  margin:30px 0 14px;
+  display:flex; align-items:center; gap:8px;
+  font-size:.95rem; font-weight:800; letter-spacing:.3px; text-transform:uppercase;
+  color:var(--texto-suave);
+  margin:20px 0 10px;
 }
 .titulo-seccion::before{
   content:""; flex:0 0 auto; width:4px; height:1.15em; border-radius:3px;
@@ -153,18 +153,17 @@ body.claro .icon-btn{background:rgba(20,32,46,.05)}
 }
 .sos-grande:active{filter:brightness(.92)}
 .sos-num{
-  font-family:Georgia,"Charter","Times New Roman",serif;
-  font-size:3.6rem; font-weight:700; letter-spacing:2px; line-height:1;
+  font-size:3rem; font-weight:900; letter-spacing:1px; line-height:1;
   text-shadow:0 3px 10px rgba(0,0,0,.35);
 }
-.sos-label{font-size:.95rem; font-weight:700; line-height:1.3; letter-spacing:.3px}
+.sos-label{font-size:.85rem; font-weight:700; line-height:1.3; letter-spacing:.3px}
 
 /* ============ BOTONES DE ACCIÓN ============ */
 .fila-botones{display:flex; gap:10px; margin:12px 0}
 .accion{
-  flex:1; border:none; border-radius:14px; color:#fff;
-  font-size:.95rem; font-weight:800; padding:10px 10px;
-  min-height:46px; cursor:pointer; line-height:1.2; letter-spacing:.2px;
+  flex:1; border:none; border-radius:12px; color:#fff;
+  font-size:.88rem; font-weight:800; padding:8px 8px;
+  min-height:40px; cursor:pointer; line-height:1.2; letter-spacing:.2px;
   transition:transform .12s ease, filter .12s ease, box-shadow .2s ease;
 }
 .accion:active{transform:translateY(1px); filter:brightness(.9)}
@@ -283,6 +282,8 @@ body.claro .tarjeta, body.claro .tip, body.claro .aviso{
 
 /* ============ AJUSTES ============ */
 .ajustes .fila-ajuste{
+  min-height:44px;
+
   display:flex; align-items:center; justify-content:space-between;
   padding:11px 0; border-bottom:1px solid var(--borde); min-height:54px;
 }
@@ -368,7 +369,7 @@ body.claro .nav-btn.activo{color:var(--oro-oscuro)}
   width:100%; max-width:420px; display:flex; flex-direction:column; gap:10px;
   box-shadow:0 14px 44px rgba(0,0,0,.5);
 }
-.chooser-titulo{font-family:Georgia,"Charter","Times New Roman",serif; font-weight:700; font-size:1.15rem; text-align:center; margin-bottom:10px}
+.chooser-titulo{font-weight:800; font-size:1rem; text-align:center; margin-bottom:8px}
 .chooser-grande{
   display:flex; align-items:center; gap:14px; width:100%;
   min-height:72px; margin:10px 0; padding:14px 18px;
@@ -395,7 +396,7 @@ body.claro .nav-btn.activo{color:var(--oro-oscuro)}
 
 /* ============ MI UBICACIÓN (GPS sin internet) ============ */
 .ubic-coords{
-  font-family:ui-monospace,Consolas,Menlo,monospace;
+  font-size:.9rem;
   font-size:1.5rem; font-weight:800; letter-spacing:1px;
   text-align:center; padding:12px 6px; word-break:break-all;
   color:var(--oro-claro);
@@ -437,8 +438,7 @@ body.claro .ubic-coords{color:var(--oro-oscuro)}
   box-shadow:0 18px 54px rgba(0,0,0,.55);
 }
 .fg-titulo{
-  font-family:Georgia,"Charter","Times New Roman",serif;
-  font-size:1.5rem; text-align:center; margin-bottom:14px;
+  font-size:1.35rem; text-align:center; margin-bottom:14px;
   background:linear-gradient(90deg, var(--oro-claro), var(--oro), var(--oro-oscuro));
   -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
 }
@@ -460,8 +460,8 @@ body.claro .ubic-coords{color:var(--oro-oscuro)}
 #toast.oculto{display:none}
 
 .caption{
-  font-size:.8rem; color:var(--texto-suave);
-  margin:4px 2px 14px; line-height:1.4;
+  font-size:.78rem; color:var(--texto-suave);
+  margin:3px 2px 10px; line-height:1.35;
 }
 .oculto{display:none !important}
 
@@ -594,6 +594,52 @@ body.claro .emergencia-falsa{box-shadow:0 10px 26px rgba(192,57,43,.35)}
 .ctc-ir{flex:0 0 auto; font-size:1.5rem; color:var(--oro); font-weight:900}
 #listaContactos{margin:14px 0}
 
+/* ============ PANEL ÚNICO (Inicio) ============ */
+.panel{
+  background:linear-gradient(180deg, var(--tarjeta-2), var(--tarjeta));
+  border:1px solid var(--borde);
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:var(--sombra);
+}
+.p-bloque{padding:10px 12px; border-bottom:1px solid var(--borde)}
+.p-bloque:last-child{border-bottom:none}
+.p-sub{
+  font-size:.72rem; font-weight:800; text-transform:uppercase; letter-spacing:.08em;
+  color:var(--texto-suave); margin:0 0 8px;
+}
+.p-nota{font-size:.76rem; color:var(--texto-suave); margin:6px 0 0; text-align:center}
+.p-fila{
+  display:flex; align-items:center; gap:11px; width:100%;
+  min-height:56px; padding:9px 12px; text-align:left;
+  background:transparent; border:none; cursor:pointer;
+  border-bottom:1px solid var(--borde);
+  color:var(--texto); font-family:inherit;
+  transition:background .12s ease;
+}
+.p-fila:last-of-type{border-bottom:none}
+.p-fila:hover{background:rgba(212,175,55,.06)}
+.p-fila:active{background:rgba(212,175,55,.12)}
+.p-ico{
+  flex:0 0 34px; height:34px; border-radius:10px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:1rem;
+}
+.p-ico.rojo{background:rgba(231,76,60,.18)}
+.p-ico.azul{background:rgba(74,163,223,.16)}
+.p-ico.oro{background:rgba(212,175,55,.16)}
+.p-ico.whats{background:rgba(37,211,102,.16)}
+.p-txt{flex:1; display:flex; flex-direction:column; min-width:0}
+.p-txt strong{font-size:.9rem; font-weight:800; line-height:1.25}
+.p-txt small{font-size:.72rem; color:var(--texto-suave); line-height:1.3; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.p-flecha{flex:0 0 auto; font-size:1.15rem; color:var(--texto-suave); font-weight:700}
+#panelInicio .fila-botones{margin:0}
+#panelInicio .sosvivo-activar{min-height:46px; font-size:.95rem; margin-top:6px}
+#panelInicio .sv-chips{margin-bottom:8px}
+#panelInicio .ubic-coords{padding:0 12px 8px; font-size:.85rem}
+#panelInicio .ubic-precision{padding:0 12px 8px}
+#panelInicio #pUbicBotones{padding:0 12px 10px; margin:0}
+
 /* ============ SOS EN VIVO ============ */
 .sv-flash{
   border-color:var(--rojo) !important;
@@ -606,8 +652,8 @@ body.claro .emergencia-falsa{box-shadow:0 10px 26px rgba(192,57,43,.35)}
 .sv-label{font-weight:800; margin:2px 0 10px; color:var(--texto)}
 .sv-chips{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px}
 .sv-chip{
-  min-height:38px; padding:5px 12px; border-radius:999px;
-  font-size:.85rem; font-weight:700; color:var(--texto);
+  min-height:32px; padding:3px 10px; border-radius:999px;
+  font-size:.78rem; font-weight:700; color:var(--texto);
   background:linear-gradient(135deg, var(--tarjeta-2), var(--tarjeta));
   border:1.5px solid var(--borde); cursor:pointer;
   transition:border-color .12s ease, transform .12s ease;
