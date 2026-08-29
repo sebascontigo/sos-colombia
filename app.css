@@ -112,8 +112,8 @@ body.claro .icon-btn{background:rgba(20,32,46,.05)}
 
 /* ============ PÁGINAS ============ */
 #contenido{max-width:720px; margin:0 auto; padding:16px 14px}
-.page{display:none; animation:aparecer .22s ease}
-.page.activa{display:block}
+.page{display:none}
+.page.activa{display:block; animation:aparecer .28s cubic-bezier(.2,.7,.3,1)}
 @keyframes aparecer{from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:none}}
 
 /* títulos de sección con barra dorada */
@@ -156,7 +156,7 @@ body.claro .icon-btn{background:rgba(20,32,46,.05)}
   font-size:3rem; font-weight:900; letter-spacing:1px; line-height:1;
   text-shadow:0 3px 10px rgba(0,0,0,.35);
 }
-.sos-label{font-size:.85rem; font-weight:700; line-height:1.3; letter-spacing:.3px}
+.sos-label{font-size:.85rem; font-weight:700; text-shadow:0 1px 8px rgba(0,0,0,.45); line-height:1.3; letter-spacing:.3px}
 
 /* ============ BOTONES DE ACCIÓN ============ */
 .fila-botones{display:flex; gap:10px; margin:12px 0}
@@ -596,13 +596,20 @@ body.claro .emergencia-falsa{box-shadow:0 10px 26px rgba(192,57,43,.35)}
 
 /* ============ PANEL ÚNICO (Inicio) ============ */
 .panel{
+  position:relative;
   background:linear-gradient(180deg, var(--tarjeta-2), var(--tarjeta));
   border:1px solid var(--borde);
   border-radius:16px;
   overflow:hidden;
-  box-shadow:var(--sombra);
+  box-shadow:var(--sombra), inset 0 1px 0 rgba(255,255,255,.045);
+}
+.panel::before{
+  content:""; position:absolute; top:0; left:14px; right:14px; height:1.5px;
+  background:linear-gradient(90deg, transparent, var(--oro) 30%, rgba(212,175,55,.25) 70%, transparent);
+  z-index:1; pointer-events:none;
 }
 .p-bloque{padding:10px 12px; border-bottom:1px solid var(--borde)}
+.panel > .p-bloque, .panel > .p-fila{position:relative}
 .p-bloque:last-child{border-bottom:none}
 .p-sub{
   font-size:.72rem; font-weight:800; text-transform:uppercase; letter-spacing:.08em;
@@ -618,6 +625,11 @@ body.claro .emergencia-falsa{box-shadow:0 10px 26px rgba(192,57,43,.35)}
   transition:background .12s ease;
 }
 .p-fila:last-of-type{border-bottom:none}
+.p-fila::after{
+  content:""; position:absolute; left:56px; right:12px; bottom:-1px; height:1px;
+  background:linear-gradient(90deg, rgba(212,175,55,.28), var(--borde) 40%, var(--borde) 60%, rgba(212,175,55,.10));
+  pointer-events:none;
+}
 .p-fila:hover{background:rgba(212,175,55,.06)}
 .p-fila:active{background:rgba(212,175,55,.12)}
 .p-ico{
@@ -625,6 +637,7 @@ body.claro .emergencia-falsa{box-shadow:0 10px 26px rgba(192,57,43,.35)}
   display:flex; align-items:center; justify-content:center;
   font-size:1rem;
 }
+.p-fila:active .p-ico{box-shadow:0 0 0 3px rgba(212,175,55,.18)}
 .p-ico.rojo{background:rgba(231,76,60,.18)}
 .p-ico.azul{background:rgba(74,163,223,.16)}
 .p-ico.oro{background:rgba(212,175,55,.16)}
@@ -729,6 +742,23 @@ body.claro .sv-ubic{color:var(--oro-oscuro)}
 }
 
 /* accesibilidad: respetar la preferencia de menos movimiento */
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible{
+  outline:2px solid var(--oro); outline-offset:2px; border-radius:8px;
+}
+input:focus, select:focus, .buscador:focus{
+  border-color:var(--oro) !important; box-shadow:0 0 0 3px rgba(212,175,55,.15);
+}
+
+/* scrollbar discreta acorde al tema (Webkit) */
+::-webkit-scrollbar{width:8px; height:8px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(212,175,55,.25); border-radius:8px}
+::-webkit-scrollbar-thumb:hover{background:rgba(212,175,55,.45)}
+
+/* acordeones: apertura suave */
+.item-acordeon{transition:background .15s ease}
+.item-acordeon.abierto{background:rgba(212,175,55,.035)}
+
 @media (prefers-reduced-motion: reduce){
   *{animation:none !important; transition:none !important}
 }
