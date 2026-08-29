@@ -9,7 +9,7 @@ const DATOS = {
 
   app: {
     nombre: "SOS Colombia",
-    version: "3.2.1",
+    version: "3.3.0",
     actualizado: "2026-08-27",
     descripcion: "Guía de emergencia y ayuda comunitaria para Colombia. Gratis, sin internet y sin recolectar datos."
   },
