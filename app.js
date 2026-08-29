@@ -384,25 +384,32 @@ function svActualizarCola(){
 }
 function svSirena(){
   if(!SV.activo) return;
-  // asegurar contexto de audio VIVO en cada pasada (en móviles puede suspenderse)
+  // asegurar contexto de audio VIVO: el toque en ACTIVAR es el "gesto de usuario"
+  // que los navegadores exigen; aquí lo reactivamos en cada pasada por si se suspendió
   if(!audioCtx){
     var AC=window.AudioContext||window.webkitAudioContext;
     if(AC) audioCtx=new AC();
   }
-  if(audioCtx){
-    if(audioCtx.state==="suspended"){ audioCtx.resume(); }
+  if(audioCtx && audioCtx.state!=="running"){
+    try{ audioCtx.resume(); }catch(e){}
+  }
+  if(audioCtx && audioCtx.state==="running"){
     try{
-      var o=audioCtx.createOscillator(), g=audioCtx.createGain();
-      o.type="sawtooth";
-      o.frequency.setValueAtTime(1150, audioCtx.currentTime);
-      o.frequency.exponentialRampToValueAtTime(500, audioCtx.currentTime+0.55);
-      g.gain.value=0.4;
-      o.connect(g); g.connect(audioCtx.destination);
-      o.start();
-      o.stop(audioCtx.currentTime+0.6);
+      // tono de alarma con cuerpo completo: fundamental + octava = más perceptible
+      var t=audioCtx.currentTime;
+      [1150, 2300].forEach(function(freq, i){
+        var o=audioCtx.createOscillator(), g=audioCtx.createGain();
+        o.type = i===0 ? "sawtooth" : "square";
+        o.frequency.setValueAtTime(freq, t);
+        o.frequency.exponentialRampToValueAtTime(freq*0.43, t+0.55);
+        g.gain.setValueAtTime(i===0?0.5:0.18, t);
+        g.gain.exponentialRampToValueAtTime(0.001, t+0.6);
+        o.connect(g); g.connect(audioCtx.destination);
+        o.start(t); o.stop(t+0.62);
+      });
     }catch(e){}
   }
-  // flash visual sincronizado: la alarma también SE VE (respaldo si el audio está bloqueado)
+  // flash visual sincronizado: la alarma también SE VE (respaldo si el audio sigue muteado)
   var caja=document.getElementById("sosVivoCaja");
   if(caja){
     caja.classList.add("sv-flash");
@@ -417,7 +424,13 @@ function activarSosVivo(){
     location.hash="#/mas";
     return;
   }
-  if(!tonoSilbato()){ /* sin audio igual sigue el resto */ }
+  // desbloquear el audio CON ESTE TOQUE (es el gesto de usuario que exige el navegador):
+  // reproducimos un tono corto de arranque ya fuerte
+  if(!audioCtx){
+    var AC=window.AudioContext||window.webkitAudioContext;
+    if(AC) audioCtx=new AC();
+  }
+  if(audioCtx && audioCtx.state!=="running"){ try{ audioCtx.resume(); }catch(e){} }
   SV.activo=true;
   SV.enviados={};
   var t=DATOS.sosVivo.tipos.filter(function(x){return x.id===SV.tipo;})[0];
@@ -432,20 +445,58 @@ function activarSosVivo(){
     navigator.vibrate([600,200,600]);
     SV.vibrateTimer=setInterval(function(){ navigator.vibrate([600,200,600]); }, 3000);
   }
-  // pantalla despierta (si el navegador lo soporta)
-  if(navigator.wakeLock && navigator.wakeLock.request){
-    navigator.wakeLock.request("screen").then(function(wl){ SV.wakeLock=wl; }).catch(function(){});
-  }
-  // ubicación en vivo
+  // pantalla despierta; si el sistema lo suelta (pantalla bloqueada con app abierta), se vuelve a pedir
+  SV.pedirWakeLock=function(){
+    if(!SV.activo) return;
+    if(navigator.wakeLock && navigator.wakeLock.request){
+      navigator.wakeLock.request("screen").then(function(wl){
+        SV.wakeLock=wl;
+        wl.addEventListener("release", function(){ setTimeout(SV.pedirWakeLock, 1000); });
+      }).catch(function(){});
+    }
+  };
+  SV.pedirWakeLock();
+  // KEEP-ALIVE de la alarma: si el sistema pausa los timers (app a segundo plano),
+  // al volver se reanudan solos. La alarma NUNCA se detiene sola — solo con el botón.
+  SV.keepAlive=function(){
+    if(!SV.activo) return;
+    if(audioCtx && audioCtx.state!=="running"){ try{ audioCtx.resume(); }catch(e){} }
+    if(!SV.sirenaTimer){ svSirena(); SV.sirenaTimer=setInterval(svSirena, 1100); }
+    if(navigator.vibrate && !SV.vibrateTimer){
+      navigator.vibrate([600,200,600]);
+      SV.vibrateTimer=setInterval(function(){ navigator.vibrate([600,200,600]); }, 3000);
+    }
+  };
+  document.addEventListener("visibilitychange", SV.keepAlive);
+  document.addEventListener("pointerdown", SV.keepAlive);
+  // ubicación en vivo; si está BLOQUEADA, reintento automático cada 15 s + cómo desbloquearla
   if(navigator.geolocation){
     $("svUbicacion").textContent=DATOS.sosVivo.activo.buscando;
     SV.watchId=navigator.geolocation.watchPosition(
       function(pos){
         SV.lat=pos.coords.latitude.toFixed(5);
         SV.lng=pos.coords.longitude.toFixed(5);
+        if(SV.gpsRetry){ clearInterval(SV.gpsRetry); SV.gpsRetry=null; }
         $("svUbicacion").textContent=DATOS.sosVivo.activo.ubicacion+SV.lat+", "+SV.lng;
       },
-      function(){ $("svUbicacion").textContent=DATOS.sosVivo.activo.sinGPS; },
+      function(err){
+        if(err && err.code===1){ // PERMISSION_DENIED: bloqueada
+          $("svUbicacion").innerHTML=DATOS.sosVivo.gpsBloqueada;
+        } else {
+          $("svUbicacion").textContent=DATOS.sosVivo.activo.sinGPS;
+        }
+        // reintento automático cada 15 s (por si el usuario la desbloquea desde ajustes)
+        if(!SV.gpsRetry){
+          SV.gpsRetry=setInterval(function(){
+            if(!SV.activo){ clearInterval(SV.gpsRetry); SV.gpsRetry=null; return; }
+            navigator.geolocation.getCurrentPosition(function(pos){
+              SV.lat=pos.coords.latitude.toFixed(5);
+              SV.lng=pos.coords.longitude.toFixed(5);
+              $("svUbicacion").textContent=DATOS.sosVivo.activo.ubicacion+SV.lat+", "+SV.lng;
+            }, function(){}, { enableHighAccuracy:true, timeout:12000, maximumAge:5000 });
+          }, 15000);
+        }
+      },
       { enableHighAccuracy:true, maximumAge:5000, timeout:15000 }
     );
   } else {
@@ -475,9 +526,14 @@ function detenerSosVivo(){
   SV.activo=false;
   if(SV.sirenaTimer){ clearInterval(SV.sirenaTimer); SV.sirenaTimer=null; }
   if(SV.vibrateTimer){ clearInterval(SV.vibrateTimer); SV.vibrateTimer=null; }
+  if(SV.gpsRetry){ clearInterval(SV.gpsRetry); SV.gpsRetry=null; }
   if(navigator.vibrate) navigator.vibrate(0);
   if(SV.watchId!=null){ navigator.geolocation.clearWatch(SV.watchId); SV.watchId=null; }
   if(SV.wakeLock){ try{ SV.wakeLock.release(); }catch(e){} SV.wakeLock=null; }
+  if(SV.keepAlive){
+    document.removeEventListener("visibilitychange", SV.keepAlive);
+    document.removeEventListener("pointerdown", SV.keepAlive);
+  }
   $("svPanel").classList.add("oculto");
   $("btnSosVivo").classList.remove("oculto");
   $("sosVivoIntro").classList.remove("oculto");
@@ -1039,6 +1095,12 @@ function eventos(){
   $("btnSilbato").addEventListener("click", function(){ silbatoActivo?detenerSilbato():iniciarSilbato(); });
   $("btnLuzSOS").addEventListener("click", iniciarLuz);
   $("cerrarLuz").addEventListener("click", detenerLuz);
+  // silbato y luz SIEMPRE a la mano (barra superior)
+  $("btnSilbatoTop").addEventListener("click", function(){
+    if(silbatoActivo){ detenerSilbato(); toast("Silbato detenido"); }
+    else { iniciarSilbato(); toast("📣 Silbato sonando — está en el volumen del celular", 3000); }
+  });
+  $("btnLuzTop").addEventListener("click", iniciarLuz);
 
   // accesibilidad
   $("btnLetraMenos").addEventListener("click", function(){ cambiarLetra(-1); });
