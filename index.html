@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="SOS Colombia: guía de emergencia y ayuda comunitaria. Gratis, sin internet y sin recolectar datos.">
+<meta name="theme-color" content="#c0392b">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<title>SOS Colombia — Emergencias</title>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<!-- ============ HEADER ============ -->
+<header id="topbar">
+  <div class="topbar-inner">
+    <span class="logo">🆘</span>
+    <div class="topbar-text">
+      <strong>SOS Colombia</strong>
+      <small id="estadoRed">Guía de emergencia</small>
+    </div>
+    <button id="btnVozGlobal" class="icon-btn" aria-label="Leer en voz alta" title="Leer en voz alta">🔊</button>
+  </div>
+</header>
+
+<!-- ============ PÁGINAS ============ -->
+<main id="contenido">
+
+  <!-- ===== INICIO ===== -->
+  <section id="page-inicio" class="page">
+    <a class="sos-grande" href="tel:123">
+      <span class="sos-num">123</span>
+      <span class="sos-label">LLAMAR AHORA<br>Emergencias nacionales</span>
+    </a>
+
+    <div class="fila-botones">
+      <button id="btnEstoyBien" class="accion verde">✅ Estoy bien</button>
+      <button id="btnNecesitoAyuda" class="accion rojo">🆘 Necesito ayuda</button>
+    </div>
+    <button id="btnEmergencia" class="emergencia-falsa" aria-label="Botón de emergencia: avisar a tus contactos con tu ubicación">
+      <span class="ef-num">🆘</span>
+      <span class="ef-txt">AVISAR A MIS CONTACTOS<br><small>con mi ubicación GPS</small></span>
+    </button>
+
+    <h2 class="titulo-seccion">🚨 SOS en vivo</h2>
+    <div class="tarjeta sosvivo-caja" id="sosVivoCaja">
+      <p class="nota" id="sosVivoIntro">Actívalo cuando estés en peligro REAL: suena una alarma que no para, tu ubicación se actualiza sola y el aviso sale a TODOS tus contactos. No necesitas escribir.</p>
+      <p class="sv-label">¿Qué te está pasando?</p>
+      <div class="sv-chips" id="svChips"><!-- lo llena app.js --></div>
+      <button id="btnSosVivo" class="sosvivo-activar">🔴 ACTIVAR SOS EN VIVO</button>
+      <div id="svPanel" class="oculto">
+        <div class="sv-estado">
+          <span class="sv-punto"></span>
+          <strong>SOS ACTIVO</strong>
+          <span id="svTipo"></span>
+        </div>
+        <p class="sv-ubic" id="svUbicacion">📡 Buscando GPS…</p>
+        <p class="sv-sirena" id="svAvisoSirena">🔊 Alarma sonando. Toca DETENER cuando estés a salvo.</p>
+        <p class="sv-cola-titulo" id="svColaTitulo">El aviso se está enviando a tus contactos. Toca cada uno para completarlo:</p>
+        <div id="svCola"><!-- lo llena app.js --></div>
+        <button id="btnDetenerSos" class="sosvivo-detener">⏹ DETENER SOS</button>
+      </div>
+    </div>
+    <p class="nota">Estos botones arman un aviso con tu ubicación (si la permites) y te dejan enviarlo por <strong>WhatsApp</strong> o por <strong>SMS</strong>. El SMS funciona sin datos, útil cuando no hay internet. Si guardaste contactos de emergencia, el botón rojo grande les envía el aviso a ellos. Si guardaste un contacto en tu ficha, "Necesito ayuda" se le envía directo.</p>
+
+    <h2 class="titulo-seccion">📍 Mi ubicación (sin internet)</h2>
+    <div class="tarjeta">
+      <p class="nota" id="ubicNota">El GPS de tu celular funciona SIN internet. Estas coordenadas las puedes enviar por SMS o leérselas a quien te rescate.</p>
+      <div id="ubicCoords" class="ubic-coords">Toca "Ver mi ubicación"</div>
+      <div id="ubicPrecision" class="ubic-precision"></div>
+      <div class="fila-botones">
+        <button id="btnUbicacion" class="accion azul">📡 Ver mi ubicación</button>
+        <button id="btnCopiarUbic" class="accion verde oculto">📋 Copiar</button>
+      </div>
+    </div>
+
+    <h2 class="titulo-seccion">🏥 Tu ficha médica</h2>
+    <button id="btnFicha" class="accion azul">🏥 Ver mi ficha médica</button>
+    <p class="nota">Si no puedes hablar, quien te ayude puede ver aquí tu tipo de sangre, alergias y a quién llamar. Llénala una sola vez en la pestaña <strong>Más</strong>.</p>
+
+    <h2 class="titulo-seccion">Acceso rápido</h2>
+    <div class="grid-accesos" id="accesosRapidos">
+      <!-- lo llena app.js -->
+    </div>
+
+    <h2 class="titulo-seccion">Comparte esta guía</h2>
+    <button id="btnCompartir" class="accion whatsapp">💬 Compartir (puede salvar vidas)</button>
+  </section>
+
+  <!-- ===== EMERGENCIAS ===== -->
+  <section id="page-emergencias" class="page">
+    <h2 class="titulo-seccion">📞 Llama ahora (nacionales)</h2>
+    <div id="numerosNacionales"><!-- lo llena app.js --></div>
+
+    <h2 class="titulo-seccion">🏚️ Qué hacer en cada desastre</h2>
+    <div id="listaDesastres"><!-- lo llena app.js --></div>
+
+    <h2 class="titulo-seccion">📍 Números por ciudad</h2>
+    <input type="search" id="buscadorCiudad" class="buscador" placeholder="Busca tu ciudad…">
+    <div id="listaCiudades"><!-- lo llena app.js --></div>
+
+    <h2 class="titulo-seccion">🧱 Si estás atrapado</h2>
+    <div class="tarjeta" id="atrapado"><!-- lo llena app.js --></div>
+  </section>
+
+  <!-- ===== PRIMEROS AUXILIOS ===== -->
+  <section id="page-auxilios" class="page">
+    <h2 class="titulo-seccion">🩺 Asistente: ¿qué hago ahora?</h2>
+    <div class="tarjeta triaje-caja" id="triajeCaja">
+      <p class="triaje-pregunta" id="triajePregunta"></p>
+      <div class="triaje-opciones" id="triajeOpciones"><!-- lo llena app.js --></div>
+      <div class="triaje-resultado oculto" id="triajeResultado">
+        <h3 id="triajeAccion"></h3>
+        <p id="triajeMensaje"></p>
+        <div class="fila-botones">
+          <a id="triajeLlamar" class="accion rojo" href="tel:123">📞 Llamar al 123</a>
+          <button id="triajeGuia" class="accion azul">📖 Ver guía paso a paso</button>
+        </div>
+      </div>
+      <button id="triajeVolver" class="chooser-cancelar oculto">↩ Volver a empezar</button>
+    </div>
+    <p class="nota">Responde las preguntas y te lleva directo a la guía correcta. En una emergencia real, llama al <a href="tel:123">123</a> mientras respondes.</p>
+
+    <h2 class="titulo-seccion">⛑️ Primeros auxilios</h2>
+    <p class="nota">Ante una emergencia médica llama al <a href="tel:123">123</a>. Toca 🔊 para escuchar cada guía.</p>
+    <div id="listaAuxilios"><!-- lo llena app.js --></div>
+  </section>
+
+  <!-- ===== AYUDA ===== -->
+  <section id="page-ayuda" class="page">
+    <h2 class="titulo-seccion">🎒 Tu casa lista para una emergencia</h2>
+    <div class="tarjeta" id="checklistHogar">
+      <div class="chk-progreso">
+        <div class="chk-barra"><div id="chkBarraInterna"></div></div>
+        <span id="chkTexto"></span>
+      </div>
+      <div id="chkLista"><!-- lo llena app.js --></div>
+    </div>
+
+    <h2 class="titulo-seccion">👨‍👩‍👧 Plan familiar de emergencia</h2>
+    <div class="tarjeta">
+      <p class="nota" id="planNota">Llénalo con tu familia HOY, no cuando pase algo. Se guarda solo en tu teléfono.</p>
+      <div class="ficha-form">
+        <label id="lblPuntoEncuentro">Punto de encuentro (parque, casa de un familiar…)
+          <input id="planPunto" type="text" placeholder="Ej: Parque del barrio, entrada norte">
+        </label>
+        <label id="lblTel1">Teléfono de contacto 1 (familia)
+          <input id="planTel1" type="tel" inputmode="tel" placeholder="Ej: 3001234567">
+        </label>
+        <label id="lblTel2">Teléfono de contacto 2 (vecino/JAC)
+          <input id="planTel2" type="tel" inputmode="tel" placeholder="Ej: 3109876543">
+        </label>
+      </div>
+      <div class="fila-botones">
+        <button id="btnGuardarPlan" class="accion verde">💾 Guardar plan</button>
+      </div>
+      <p class="nota" id="planConsejo"></p>
+    </div>
+
+    <h2 class="titulo-seccion">🧰 Botiquín casero</h2>
+    <div class="tarjeta" id="listaBotiquin"><!-- lo llena app.js --></div>
+
+    <h2 class="titulo-seccion">🤝 Cómo ayudar a los más vulnerables</h2>
+    <div id="listaVulnerables"><!-- lo llena app.js --></div>
+
+    <h2 class="titulo-seccion">💧 Agua segura y alimentos</h2>
+    <div class="tarjeta" id="listaAgua"><!-- lo llena app.js --></div>
+
+    <h2 class="titulo-seccion">❤️ Cómo donar de verdad</h2>
+    <div class="tarjeta" id="donar"><!-- lo llena app.js --></div>
+
+    <h2 class="titulo-seccion">🛑 Cuidado con estafas y noticias falsas</h2>
+    <div class="tarjeta" id="listaEstafas"><!-- lo llena app.js --></div>
+
+    <h2 class="titulo-seccion">📡 Fuentes oficiales</h2>
+    <div class="tarjeta" id="listaFuentes"><!-- lo llena app.js --></div>
+    <div class="tip" id="tipJac"></div>
+    <div class="aviso" id="tipRadio"></div>
+  </section>
+
+  <!-- ===== MÁS ===== -->
+  <section id="page-mas" class="page">
+    <h2 class="titulo-seccion">⚙️ Herramientas de supervivencia</h2>
+    <div class="fila-botones">
+      <button id="btnSilbato" class="accion azul">📣 Silbato SOS</button>
+      <button id="btnLuzSOS" class="accion amarillo">💡 Luz SOS</button>
+    </div>
+    <p class="nota">El silbato y la luz funcionan sin internet y ayudan a que te encuentren.</p>
+
+    <h2 class="titulo-seccion">👥 Tus contactos de emergencia</h2>
+    <div class="tarjeta">
+      <p class="nota">Agrega las personas que deben saber si te pasa algo (mamá, pareja, vecino, JAC). Se guarda solo en TU teléfono. Cuando toques el botón rojo grande de Inicio, el aviso con tu ubicación queda listo para enviarles.</p>
+      <div id="listaContactos"></div>
+      <div class="ficha-form">
+        <label>Nombre
+          <input id="ctcNombre" type="text" placeholder="Nombre (Ej: Mamá)">
+        </label>
+        <label>Celular
+          <input id="ctcTel" type="tel" inputmode="tel" placeholder="Celular (Ej: 3001234567)">
+        </label>
+      </div>
+      <div class="fila-botones">
+        <button id="btnAgregarContacto" class="accion verde">➕ Agregar contacto</button>
+      </div>
+      <p class="nota" id="ctcNotaMax"></p>
+    </div>
+
+    <h2 class="titulo-seccion">🏥 Ficha médica de emergencia (ICE)</h2>
+    <div class="tarjeta">
+      <p class="nota">Se guarda solo en TU teléfono (privado, no se envía a ningún lado). Si no puedes hablar, quien te ayude puede verla en grande. También se adjunta a tu aviso de "Necesito ayuda".</p>
+      <div class="ficha-form">
+        <label>Tu nombre
+          <input id="fNombre" type="text" autocomplete="name" placeholder="Ej: María Pérez">
+        </label>
+        <label>Tipo de sangre
+          <select id="fSangre"></select>
+        </label>
+        <label>Alergias
+          <input id="fAlergias" type="text" placeholder="Ej: penicilina, maní">
+        </label>
+        <label>Medicamentos que tomas
+          <input id="fMedicamentos" type="text" placeholder="Ej: losartán, insulina">
+        </label>
+        <label>Contacto de emergencia (nombre)
+          <input id="fContactoNombre" type="text" placeholder="Ej: Juan Pérez (hijo)">
+        </label>
+        <label>Teléfono de ese contacto
+          <input id="fContactoNum" type="tel" inputmode="tel" placeholder="Ej: 3001234567">
+        </label>
+      </div>
+      <div class="fila-botones">
+        <button id="btnGuardarFicha" class="accion verde">💾 Guardar ficha</button>
+        <button id="btnVerFicha" class="accion azul">👁️ Ver ficha grande</button>
+      </div>
+    </div>
+
+    <h2 class="titulo-seccion">👁️ Accesibilidad</h2>
+    <div class="tarjeta ajustes">
+      <div class="fila-ajuste">
+        <span>Tamaño de letra</span>
+        <span class="grupo">
+          <button id="btnLetraMenos" class="mini">A−</button>
+          <button id="btnLetraNormal" class="mini">A</button>
+          <button id="btnLetraMas" class="mini">A+</button>
+        </span>
+      </div>
+      <div class="fila-ajuste">
+        <span>Alto contraste</span>
+        <button id="btnContraste" class="mini">Activar</button>
+      </div>
+      <div class="fila-ajuste">
+        <span>Modo claro (para el día)</span>
+        <button id="btnClaro" class="mini">Activar</button>
+      </div>
+    </div>
+
+    <h2 class="titulo-seccion">📲 Instalar en tu celular</h2>
+    <div class="tarjeta">
+      <p>Instala esta app para tenerla siempre a mano, incluso sin internet.</p>
+      <button id="btnInstalar" class="accion azul">⬇️ Instalar app</button>
+      <p class="nota" id="instruccionesInstalar">En el navegador: menú (⋮) → "Agregar a pantalla de inicio" o "Instalar aplicación".</p>
+    </div>
+
+    <h2 class="titulo-seccion">ℹ️ Acerca de</h2>
+    <div class="tarjeta" id="acerca"><!-- lo llena app.js --></div>
+  </section>
+
+</main>
+
+<!-- ============ NAVEGACIÓN INFERIOR ============ -->
+<nav id="navInferior" aria-label="Navegación principal">
+  <button class="nav-btn activo" data-page="inicio"><span class="nav-ico">🏠</span><span class="nav-txt">Inicio</span></button>
+  <button class="nav-btn" data-page="emergencias"><span class="nav-ico">🚨</span><span class="nav-txt">Emerg.</span></button>
+  <button class="nav-btn" data-page="auxilios"><span class="nav-ico">⛑️</span><span class="nav-txt">Auxilios</span></button>
+  <button class="nav-btn" data-page="ayuda"><span class="nav-ico">🤝</span><span class="nav-txt">Ayuda</span></button>
+  <button class="nav-btn" data-page="mas"><span class="nav-ico">⚙️</span><span class="nav-txt">Más</span></button>
+</nav>
+
+<!-- ============ CHOOSER DE CANAL (WhatsApp / SMS) ============ -->
+<div id="chooser" class="oculto" role="dialog" aria-modal="true" aria-label="Elegir por dónde enviar el aviso">
+  <div class="chooser-caja">
+    <p class="chooser-titulo">Enviar aviso por:</p>
+    <p id="chooserDestino" class="chooser-destino oculto"></p>
+    <button id="chooserWhatsApp" class="accion whatsapp">💬 WhatsApp <small>(necesita datos)</small></button>
+    <button id="chooserSMS" class="accion azul">✉️ SMS <small>(funciona sin datos)</small></button>
+    <button id="chooserCancelar" class="chooser-cancelar">Cancelar</button>
+  </div>
+</div>
+
+<!-- ============ CHOOSER DE CONTACTO (a quién enviar) ============ -->
+<div id="chooserContacto" class="oculto" role="dialog" aria-modal="true" aria-label="Elegir a qué contacto enviar el aviso">
+  <div class="chooser-caja">
+    <p class="chooser-titulo">¿A quién le envías el aviso?</p>
+    <div id="chooserListaContactos"></div>
+    <button id="chooserContactoCancelar" class="chooser-cancelar">Cancelar</button>
+  </div>
+</div>
+
+<!-- ============ OVERLAY FICHA MÉDICA GRANDE (para quien te ayuda) ============ -->
+<div id="overlayFicha" class="oculto" role="dialog" aria-modal="true" aria-label="Ficha médica de emergencia">
+  <div class="ficha-grande">
+    <h2 class="fg-titulo">🏥 FICHA MÉDICA</h2>
+    <div id="fichaGrandeContenido"></div>
+    <button id="cerrarFicha" class="accion rojo">✕ Cerrar</button>
+  </div>
+</div>
+
+<!-- ============ OVERLAY LUZ SOS ============ -->
+<div id="overlayLuz" class="oculto" aria-hidden="true">
+  <button id="cerrarLuz" class="btn-cerrar-luz">✕ Detener luz SOS</button>
+</div>
+
+<!-- ============ TOAST (avisos) ============ -->
+<div id="toast" class="oculto" role="status"></div>
+
+<script src="datos.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
