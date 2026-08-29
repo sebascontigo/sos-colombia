@@ -140,21 +140,31 @@ function enviarEstado(tipo){
    ============================================================ */
 var ubicacionActual=null;
 function verUbicacion(){
-  var coords=$("ubicCoords"), prec=$("ubicPrecision");
-  if(!navigator.geolocation){ coords.textContent=DATOS.miUbicacion.sinGPS; return; }
-  coords.textContent=DATOS.miUbicacion.pidiendo;
+  var coords=$("ubicCoords"), prec=$("ubicPrecision"), mini=$("pUbicMini");
+  if(!navigator.geolocation){
+    if(mini) mini.textContent=DATOS.miUbicacion.sinGPS;
+    return;
+  }
+  if(mini) mini.textContent="📡 Buscando GPS…";
+  coords.classList.add("oculto");
   prec.textContent="";
   navigator.geolocation.getCurrentPosition(
     function(pos){
       var la=pos.coords.latitude.toFixed(5), lo=pos.coords.longitude.toFixed(5);
       ubicacionActual=la+","+lo;
       coords.textContent=la+"  ,  "+lo;
+      coords.classList.remove("oculto");
       prec.textContent=DATOS.miUbicacion.precision+Math.round(pos.coords.accuracy)+" metros";
+      if(mini) mini.textContent="✅ "+la+", "+lo;
       var bc=$("btnCopiarUbic"); if(bc) bc.classList.remove("oculto");
+      var fb=$("pUbicBotones"); if(fb) fb.classList.remove("oculto");
       toast("📍 Ubicación lista (funciona sin internet)");
     },
-    function(){
-      coords.textContent=DATOS.miUbicacion.error;
+    function(err){
+      var msg=(err&&err.code===1)?DATOS.miUbicacion.bloqueada:DATOS.miUbicacion.error;
+      if(mini) mini.textContent=msg.slice(0,40);
+      coords.classList.remove("oculto");
+      coords.textContent=msg;
       prec.textContent="";
     },
     { timeout:15000, maximumAge:30000, enableHighAccuracy:true }
@@ -437,7 +447,6 @@ function activarSosVivo(){
   $("svTipo").textContent=DATOS.sosVivo.activo.tipo+t.icono+" "+t.txt;
   $("btnSosVivo").classList.add("oculto");
   $("svPanel").classList.remove("oculto");
-  $("sosVivoIntro").classList.add("oculto");
   // sirena cada ~1.1 s + vibración periódica
   svSirena();
   SV.sirenaTimer=setInterval(svSirena, 1100);
@@ -536,7 +545,6 @@ function detenerSosVivo(){
   }
   $("svPanel").classList.add("oculto");
   $("btnSosVivo").classList.remove("oculto");
-  $("sosVivoIntro").classList.remove("oculto");
   $("btnSosVivo").textContent=DATOS.sosVivo.activar;
   toast(DATOS.sosVivo.detenido, 4500);
 }
@@ -849,14 +857,21 @@ function cargarAjustes(){
     if(g){
       var o=JSON.parse(g);
       if(o){
-        if(typeof o.fs==="number") AJUSTES.fs=o.fs;
+        if(typeof o.fs==="number"){
+          // migración al rediseño compacto: letras de la era vieja bajan a la nueva base
+          AJUSTES.fs = o.fs<=14 ? o.fs : Math.max(14, o.fs-3);
+        }
         if(typeof o.contraste==="boolean") AJUSTES.contraste=o.contraste;
         if(typeof o.claro==="boolean") AJUSTES.claro=o.claro;
-        // si venía con el campo antiguo "oscuro", se ignora: el oscuro es ahora el tema por defecto
       }
     }
   }catch(e){}
   aplicarAjustes();
+  // si la migración cambió el valor, se persiste ya
+  try{
+    var viejo=localStorage.getItem("sosajustes");
+    if(viejo && JSON.parse(viejo).fs!==AJUSTES.fs) guardarAjustes();
+  }catch(e2){}
 }
 function aplicarAjustes(){
   document.documentElement.style.setProperty("--fs", AJUSTES.fs+"px");
