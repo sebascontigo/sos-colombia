@@ -22,8 +22,12 @@
         SOS con flash visual + audio robusto, GPS warm-up al
         abrir, mensaje SOS sin enlace roto, números de contacto
         internacionales y más aire en Inicio.
+   v13: alarma que NUNCA se detiene sola (keep-alive + wake
+        lock re-request), audio con octava (más perceptible),
+        ubicación bloqueada: instrucción + reintento cada 15s,
+        silbato y luz en la barra superior, modo compacto.
    ============================================================ */
-var CACHE = "sos-colombia-v12";
+var CACHE = "sos-colombia-v13";
 var ARCHIVOS = [
   "./",
   "./index.html",
