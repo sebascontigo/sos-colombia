@@ -9,7 +9,7 @@ const DATOS = {
 
   app: {
     nombre: "SOS Colombia",
-    version: "3.4.0",
+    version: "4.0.0",
     actualizado: "2026-08-27",
     descripcion: "Guía de emergencia y ayuda comunitaria para Colombia. Gratis, sin internet y sin recolectar datos."
   },
@@ -21,6 +21,7 @@ const DATOS = {
     nota: "El GPS de tu celular funciona SIN internet. Estas coordenadas las puedes enviar por SMS o leérselas a quien te rescate.",
     pidiendo: "📡 Buscando señal GPS… (funciona sin internet, puede tardar unos segundos)",
     error: "No pude obtener tu ubicación. Sal a un lugar abierto, lejos de techos, e inténtalo de nuevo.",
+    bloqueada: "🔒 Ubicación bloqueada: toca el candado 🔒 de la barra de direcciones → Permisos → Ubicación → Permitir.",
     sinGPS: "Tu celular no tiene GPS disponible.",
     copiado: "📋 Ubicación copiada. Pégala en un SMS o WhatsApp.",
     precision: "Precisión: ~"
