@@ -33,6 +33,7 @@
       <span class="sos-num">123</span>
       <span class="sos-label">LLAMAR AHORA<br>Emergencias nacionales</span>
     </a>
+    <p class="caption">Policía, ambulancia y bomberos. Toca y llama.</p>
 
     <div class="fila-botones">
       <button id="btnEstoyBien" class="accion verde">✅ Estoy bien</button>
@@ -42,6 +43,7 @@
       <span class="ef-num">🆘</span>
       <span class="ef-txt">AVISAR A MIS CONTACTOS<br><small>con mi ubicación GPS</small></span>
     </button>
+    <p class="caption">Elige a quién: mamá, tu pareja, un vecino. Saldrá con tu ubicación.</p>
 
     <h2 class="titulo-seccion">🚨 SOS en vivo</h2>
     <div class="tarjeta sosvivo-caja" id="sosVivoCaja">
@@ -62,11 +64,10 @@
         <button id="btnDetenerSos" class="sosvivo-detener">⏹ DETENER SOS</button>
       </div>
     </div>
-    <p class="nota">Estos botones arman un aviso con tu ubicación (si la permites) y te dejan enviarlo por <strong>WhatsApp</strong> o por <strong>SMS</strong>. El SMS funciona sin datos, útil cuando no hay internet. Si guardaste contactos de emergencia, el botón rojo grande les envía el aviso a ellos. Si guardaste un contacto en tu ficha, "Necesito ayuda" se le envía directo.</p>
+    <p class="caption">Avisa a tus contactos por WhatsApp o SMS, con tu ubicación. El SMS sirve sin internet.</p>
 
     <h2 class="titulo-seccion">📍 Mi ubicación (sin internet)</h2>
     <div class="tarjeta">
-      <p class="nota" id="ubicNota">El GPS de tu celular funciona SIN internet. Estas coordenadas las puedes enviar por SMS o leérselas a quien te rescate.</p>
       <div id="ubicCoords" class="ubic-coords">Toca "Ver mi ubicación"</div>
       <div id="ubicPrecision" class="ubic-precision"></div>
       <div class="fila-botones">
@@ -74,10 +75,11 @@
         <button id="btnCopiarUbic" class="accion verde oculto">📋 Copiar</button>
       </div>
     </div>
+    <p class="caption">El GPS funciona sin datos. Cópialas y mándalas por SMS o díctaselas a quien te rescate.</p>
 
     <h2 class="titulo-seccion">🏥 Tu ficha médica</h2>
     <button id="btnFicha" class="accion azul">🏥 Ver mi ficha médica</button>
-    <p class="nota">Si no puedes hablar, quien te ayude puede ver aquí tu tipo de sangre, alergias y a quién llamar. Llénala una sola vez en la pestaña <strong>Más</strong>.</p>
+    <p class="caption">Tu sangre, alergias y a quién llamar — por si no puedes hablar. Se llena en <strong>Más</strong>.</p>
 
     <h2 class="titulo-seccion">Acceso rápido</h2>
     <div class="grid-accesos" id="accesosRapidos">
@@ -86,6 +88,7 @@
 
     <h2 class="titulo-seccion">Comparte esta guía</h2>
     <button id="btnCompartir" class="accion whatsapp">💬 Compartir (puede salvar vidas)</button>
+    <p class="caption">Mándasela a tu familia: funciona sin internet y no pesa.</p>
   </section>
 
   <!-- ===== EMERGENCIAS ===== -->
@@ -196,8 +199,8 @@
         <label>Nombre
           <input id="ctcNombre" type="text" placeholder="Nombre (Ej: Mamá)">
         </label>
-        <label>Celular
-          <input id="ctcTel" type="tel" inputmode="tel" placeholder="Celular (Ej: 3001234567)">
+        <label>Celular o WhatsApp (cualquier país)
+          <input id="ctcTel" type="tel" inputmode="tel" placeholder="3001234567 · +34600123456 · +13125551234">
         </label>
       </div>
       <div class="fila-botones">
@@ -280,10 +283,10 @@
 <!-- ============ CHOOSER DE CANAL (WhatsApp / SMS) ============ -->
 <div id="chooser" class="oculto" role="dialog" aria-modal="true" aria-label="Elegir por dónde enviar el aviso">
   <div class="chooser-caja">
-    <p class="chooser-titulo">Enviar aviso por:</p>
+    <p class="chooser-titulo">¿Por dónde?</p>
     <p id="chooserDestino" class="chooser-destino oculto"></p>
-    <button id="chooserWhatsApp" class="accion whatsapp">💬 WhatsApp <small>(necesita datos)</small></button>
-    <button id="chooserSMS" class="accion azul">✉️ SMS <small>(funciona sin datos)</small></button>
+    <button id="chooserWhatsApp" class="chooser-grande wa"><span>💬</span> WhatsApp<small>rápido, con internet</small></button>
+    <button id="chooserSMS" class="chooser-grande sms"><span>✉️</span> SMS<small>funciona sin internet</small></button>
     <button id="chooserCancelar" class="chooser-cancelar">Cancelar</button>
   </div>
 </div>
@@ -291,7 +294,7 @@
 <!-- ============ CHOOSER DE CONTACTO (a quién enviar) ============ -->
 <div id="chooserContacto" class="oculto" role="dialog" aria-modal="true" aria-label="Elegir a qué contacto enviar el aviso">
   <div class="chooser-caja">
-    <p class="chooser-titulo">¿A quién le envías el aviso?</p>
+    <p class="chooser-titulo">¿A quién?</p>
     <div id="chooserListaContactos"></div>
     <button id="chooserContactoCancelar" class="chooser-cancelar">Cancelar</button>
   </div>
