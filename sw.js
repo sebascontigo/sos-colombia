@@ -26,12 +26,12 @@
         lock re-request), audio con octava (más perceptible),
         ubicación bloqueada: instrucción + reintento cada 15s,
         silbato y luz en la barra superior, modo compacto.
-   v14-16: REDISEÑO UX v4.0 (+v16: theme-color oscuro, hallazgo de auditoría) — panel único en Inicio (filas tipo
+   v14-17: REDISEÑO UX v4.0-4.1 (+v16 theme-color; v17: capa de pulido visual: transición de pestañas, hairlines dorados, focus ring accesible, scrollbar, acordeones suaves) — panel único en Inicio (filas tipo
         lista, cero amontonamiento), UNA sola fuente de letra
         en toda la app y compactado real (fs 14, botones 40,
         chips 32, topbar/nav finos).
    ============================================================ */
-var CACHE = "sos-colombia-v16";
+var CACHE = "sos-colombia-v17";
 var ARCHIVOS = [
   "./",
   "./index.html",
