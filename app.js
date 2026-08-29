@@ -70,8 +70,11 @@ function textoDePagina(page){
    El SMS funciona sin datos (2G), clave cuando no hay internet.
    ============================================================ */
 function normalizarNumero(num){
-  // solo dígitos; si es un celular colombiano de 10 dígitos, antepone 57 (para wa.me)
-  var d=String(num||"").replace(/\D/g,"");
+  // solo dígitos; si trae "+" (formato internacional), se respeta tal cual;
+  // si es un celular colombiano de 10 dígitos, antepone 57 (para wa.me)
+  var s=String(num||"").trim();
+  if(s.indexOf("+")===0) return s.replace(/[^\d]/g,""); // ya tiene código de país
+  var d=s.replace(/\D/g,"");
   if(d.length===10) d="57"+d;
   return d;
 }
@@ -273,7 +276,8 @@ function agregarContacto(){
   var nombre=$("ctcNombre").value.trim();
   var tel=$("ctcTel").value.trim();
   if(!nombre || !tel){ toast("Escribe el nombre y el celular del contacto."); return; }
-  if(!/^[0-9+\s-]{7,}$/.test(tel)){ toast("Ese celular no parece válido."); return; }
+  // acepta números de CUALQUIER país: +34 6xx (España), +1 (EEUU), 57 3xx (Colombia)…
+  if(!/^\+?[0-9][0-9\s-]{6,17}$/.test(tel)){ toast("Ese número no parece válido (ej: 3001234567 o +34600123456)."); return; }
   if(CONTACTOS.length>=5){ toast(DATOS.contactos.maximo); return; }
   CONTACTOS.push({ nombre:nombre, tel:tel });
   guardarContactosLS();
@@ -353,9 +357,16 @@ function svRenderChips(){
 }
 function svMensaje(){
   var m=DATOS.sosVivo.mensajes[SV.tipo]||DATOS.sosVivo.mensajes.peligro;
-  var url=SV.lat!=null ? "https://maps.google.com/?q="+SV.lat+","+SV.lng : "";
-  var msg=m+" "+url+" "+resumenMedico();
-  msg+=" "+DATOS.sosVivo.mensajeBase+(SV.lat!=null?SV.lat+","+SV.lng:"(GPS aún sin señal)");
+  var msg=m+" ";
+  if(SV.lat!=null){
+    msg+="https://maps.google.com/?q="+SV.lat+","+SV.lng+" ";
+    msg+=resumenMedico();
+    msg+=" "+DATOS.sosVivo.mensajeBase+SV.lat+","+SV.lng;
+  } else {
+    // SIN GPS aún: mensaje válido sin enlace roto
+    msg+=resumenMedico();
+    msg+=" (GPS sin señal todavía; si no contesto, mi última zona conocida es donde suelo estar. Llama al 123.)";
+  }
   return msg;
 }
 function svActualizarCola(){
@@ -372,16 +383,31 @@ function svActualizarCola(){
   $("svCola").innerHTML=html;
 }
 function svSirena(){
-  if(!SV.activo||!audioCtx) return;
-  // barrido descendente tipo alarma, repetido por el timer
-  var o=audioCtx.createOscillator(), g=audioCtx.createGain();
-  o.type="sawtooth";
-  o.frequency.setValueAtTime(1150, audioCtx.currentTime);
-  o.frequency.exponentialRampToValueAtTime(500, audioCtx.currentTime+0.55);
-  g.gain.value=0.35;
-  o.connect(g); g.connect(audioCtx.destination);
-  o.start();
-  o.stop(audioCtx.currentTime+0.6);
+  if(!SV.activo) return;
+  // asegurar contexto de audio VIVO en cada pasada (en móviles puede suspenderse)
+  if(!audioCtx){
+    var AC=window.AudioContext||window.webkitAudioContext;
+    if(AC) audioCtx=new AC();
+  }
+  if(audioCtx){
+    if(audioCtx.state==="suspended"){ audioCtx.resume(); }
+    try{
+      var o=audioCtx.createOscillator(), g=audioCtx.createGain();
+      o.type="sawtooth";
+      o.frequency.setValueAtTime(1150, audioCtx.currentTime);
+      o.frequency.exponentialRampToValueAtTime(500, audioCtx.currentTime+0.55);
+      g.gain.value=0.4;
+      o.connect(g); g.connect(audioCtx.destination);
+      o.start();
+      o.stop(audioCtx.currentTime+0.6);
+    }catch(e){}
+  }
+  // flash visual sincronizado: la alarma también SE VE (respaldo si el audio está bloqueado)
+  var caja=document.getElementById("sosVivoCaja");
+  if(caja){
+    caja.classList.add("sv-flash");
+    setTimeout(function(){ caja.classList.remove("sv-flash"); }, 450);
+  }
 }
 function activarSosVivo(){
   if(SV.activo) return;
@@ -1152,6 +1178,18 @@ function init(){
   ruta();
   if(!soportaVoz){
     var bg=$("btnVozGlobal"); if(bg) bg.style.display="none";
+  }
+  // WARM-UP del GPS: pedir el permiso UNA vez al abrir la app.
+  // Así, cuando toque "Necesito ayuda" o el SOS, la ubicación ya está
+  // autorizada y llega sin preguntar. No se muestra nada si falla.
+  if(navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(
+      function(pos){
+        ubicacionActual={ lat:pos.coords.latitude.toFixed(5), lng:pos.coords.longitude.toFixed(5) };
+      },
+      function(){ /* permiso negado u error: silencio; se pedirá al usar */ },
+      { timeout:10000, maximumAge:300000 }
+    );
   }
 }
 if(document.readyState==="loading"){
