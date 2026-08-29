@@ -17,8 +17,13 @@
    v11: tipografía editorial (serif en 123/títulos), números
         tabulares, manifest oscuro y AUTO-RECARGA: al activarse
         una versión nueva, la app se actualiza sola.
+   v12: feedback de Sebastián — captions bajo cada botón,
+        choosers minimalistas (WhatsApp/SMS grandes), alarma
+        SOS con flash visual + audio robusto, GPS warm-up al
+        abrir, mensaje SOS sin enlace roto, números de contacto
+        internacionales y más aire en Inicio.
    ============================================================ */
-var CACHE = "sos-colombia-v11";
+var CACHE = "sos-colombia-v12";
 var ARCHIVOS = [
   "./",
   "./index.html",
