@@ -21,7 +21,7 @@
   --borde:rgba(255,255,255,.08);
   --sombra:0 6px 18px rgba(0,0,0,.35);
   --radio:18px;
-  --fs:17px;
+  --fs:15px;
 }
 
 /* ---- MODO CLARO (para exteriores / plena luz) ---- */
@@ -107,6 +107,8 @@ body.claro #topbar{
 }
 .icon-btn:active{background:rgba(255,255,255,.18); transform:scale(.96)}
 body.claro .icon-btn{background:rgba(20,32,46,.05)}
+.icon-btn.oro{border-color:rgba(212,175,55,.45)}
+.icon-btn.oro:active{background:rgba(212,175,55,.25)}
 
 /* ============ PÁGINAS ============ */
 #contenido{max-width:720px; margin:0 auto; padding:16px 14px}
@@ -160,9 +162,9 @@ body.claro .icon-btn{background:rgba(20,32,46,.05)}
 /* ============ BOTONES DE ACCIÓN ============ */
 .fila-botones{display:flex; gap:10px; margin:12px 0}
 .accion{
-  flex:1; border:none; border-radius:16px; color:#fff;
-  font-size:1rem; font-weight:800; padding:16px 12px;
-  min-height:58px; cursor:pointer; line-height:1.2; letter-spacing:.2px;
+  flex:1; border:none; border-radius:14px; color:#fff;
+  font-size:.95rem; font-weight:800; padding:10px 10px;
+  min-height:46px; cursor:pointer; line-height:1.2; letter-spacing:.2px;
   transition:transform .12s ease, filter .12s ease, box-shadow .2s ease;
 }
 .accion:active{transform:translateY(1px); filter:brightness(.9)}
@@ -231,6 +233,7 @@ body.claro .tarjeta, body.claro .tip, body.claro .aviso{
   border-radius:var(--radio); box-shadow:var(--sombra);
   margin-bottom:11px; overflow:hidden;
 }
+
 .item-cab{
   display:flex; align-items:center; gap:12px; width:100%;
   padding:15px 15px; background:none; border:none; cursor:pointer;
@@ -457,8 +460,8 @@ body.claro .ubic-coords{color:var(--oro-oscuro)}
 #toast.oculto{display:none}
 
 .caption{
-  font-size:.84rem; color:var(--texto-suave);
-  margin:6px 2px 18px; line-height:1.45;
+  font-size:.8rem; color:var(--texto-suave);
+  margin:4px 2px 14px; line-height:1.4;
 }
 .oculto{display:none !important}
 
@@ -603,8 +606,8 @@ body.claro .emergencia-falsa{box-shadow:0 10px 26px rgba(192,57,43,.35)}
 .sv-label{font-weight:800; margin:2px 0 10px; color:var(--texto)}
 .sv-chips{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px}
 .sv-chip{
-  min-height:44px; padding:8px 14px; border-radius:999px;
-  font-size:.92rem; font-weight:700; color:var(--texto);
+  min-height:38px; padding:5px 12px; border-radius:999px;
+  font-size:.85rem; font-weight:700; color:var(--texto);
   background:linear-gradient(135deg, var(--tarjeta-2), var(--tarjeta));
   border:1.5px solid var(--borde); cursor:pointer;
   transition:border-color .12s ease, transform .12s ease;
