@@ -119,7 +119,7 @@ body.claro .icon-btn{background:rgba(20,32,46,.05)}
   display:flex; align-items:center; gap:10px;
   font-family:Georgia,"Charter","Times New Roman",serif;
   font-size:1.12rem; font-weight:700; letter-spacing:.2px;
-  margin:22px 0 12px;
+  margin:30px 0 14px;
 }
 .titulo-seccion::before{
   content:""; flex:0 0 auto; width:4px; height:1.15em; border-radius:3px;
@@ -365,7 +365,19 @@ body.claro .nav-btn.activo{color:var(--oro-oscuro)}
   width:100%; max-width:420px; display:flex; flex-direction:column; gap:10px;
   box-shadow:0 14px 44px rgba(0,0,0,.5);
 }
-.chooser-titulo{font-family:Georgia,"Charter","Times New Roman",serif; font-weight:700; font-size:1.08rem; text-align:center; margin-bottom:2px}
+.chooser-titulo{font-family:Georgia,"Charter","Times New Roman",serif; font-weight:700; font-size:1.15rem; text-align:center; margin-bottom:10px}
+.chooser-grande{
+  display:flex; align-items:center; gap:14px; width:100%;
+  min-height:72px; margin:10px 0; padding:14px 18px;
+  border-radius:18px; border:2px solid transparent;
+  font-size:1.2rem; font-weight:900; color:#fff; cursor:pointer; text-align:left;
+  transition:transform .12s ease, filter .12s ease;
+}
+.chooser-grande:active{transform:translateY(1px)}
+.chooser-grande span{font-size:1.6rem}
+.chooser-grande small{display:block; font-size:.78rem; font-weight:600; opacity:.9; margin-top:2px}
+.chooser-grande.wa{background:linear-gradient(160deg,#25d366,#128c4b); box-shadow:0 8px 22px rgba(18,140,75,.4)}
+.chooser-grande.sms{background:linear-gradient(160deg,#4aa3df,#1f618d); box-shadow:0 8px 22px rgba(31,97,141,.4)}
 .chooser-caja .accion{width:100%}
 .chooser-caja small{display:block; font-weight:400; font-size:.72rem; opacity:.92}
 .chooser-cancelar{
@@ -444,6 +456,10 @@ body.claro .ubic-coords{color:var(--oro-oscuro)}
 }
 #toast.oculto{display:none}
 
+.caption{
+  font-size:.84rem; color:var(--texto-suave);
+  margin:6px 2px 18px; line-height:1.45;
+}
 .oculto{display:none !important}
 
 /* ============ ASISTENTE DE TRIAJE (¿qué hago ahora?) ============ */
@@ -576,6 +592,10 @@ body.claro .emergencia-falsa{box-shadow:0 10px 26px rgba(192,57,43,.35)}
 #listaContactos{margin:14px 0}
 
 /* ============ SOS EN VIVO ============ */
+.sv-flash{
+  border-color:var(--rojo) !important;
+  box-shadow:0 0 0 3px rgba(231,76,60,.35), 0 0 40px rgba(231,76,60,.35) !important;
+}
 .sosvivo-caja{
   border:1px solid rgba(255,95,82,.35);
   box-shadow:0 6px 22px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.04);
