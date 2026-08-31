@@ -31,7 +31,7 @@
         en toda la app y compactado real (fs 14, botones 40,
         chips 32, topbar/nav finos).
    ============================================================ */
-var CACHE = "sos-colombia-v17";
+var CACHE = "sos-colombia-v18";
 var ARCHIVOS = [
   "./",
   "./index.html",
