@@ -9,7 +9,7 @@ const DATOS = {
 
   app: {
     nombre: "SOS Colombia",
-    version: "4.2.0",
+    version: "4.3.0",
     actualizado: "2026-08-27",
     descripcion: "Guía de emergencia y ayuda comunitaria para Colombia. Gratis, sin internet y sin recolectar datos."
   },
@@ -604,6 +604,31 @@ const DATOS = {
     "Muévete lo menos posible para no levantar polvo.",
     "Usa la linterna del celular si tienes batería. Ahórrala."
   ],
+
+
+  /* ---------- HUMANIDAD (v4.3: calma, disclaimers, esperanza opcional) ---------- */
+  humanidad: {
+    calma: "Respira hondo. Estás haciendo lo correcto. Actúa con calma y sin prisa.",
+    calmaRcp: "Respira. Estás a tiempo: cada compresión cuenta. No estás solo/a — el 123 te guía.",
+    disclaimer: "Guía educativa de emergencias. No reemplaza a médicos, policías ni rescatistas. Ante duda, llama al 123.",
+    explicacionSos: "Al activar: sonará una alarma fuerte, tu pantalla se mantendrá encendida y verás la lista de tus contactos para enviarles el aviso con tu ubicación. Puedes detenerlo cuando quieras.",
+    explicacionChooser: "Se abrirá WhatsApp (o mensajes) con el aviso ya escrito: solo revisa y envía.",
+    offlineBadge: "📶 sin internet",
+    esperanza: {
+      titulo: "🕊️ Mensajes de esperanza (opcional)",
+      nota: "Frases serenas de ánimo para momentos difíciles. Puedes activarlas o ignorarlas para siempre: es tu elección y la app funciona igual de bien sin ellas.",
+      frases: [
+        "Respira. Has dado el primer paso correcto y eso ya importa.",
+        "Con calma y corazón, se puede. No estás solo/a.",
+        "Cada paso pequeño cuenta. Sigue.",
+        "La ayuda viene. Mientras tanto, cuida tu respiración.",
+        "Hoy te sostienes tú y alguien te sostiene a ti, aunque no lo veas.",
+        "La vida agradece tu calma. Un paso más.",
+        "Gracias por cuidar de alguien. El mundo necesita gente como tú.",
+        "La calma es también fuerza. Rescata con serenidad."
+      ]
+    }
+  },
 
   /* ---------- MENSAJES DE COMPARTIR ---------- */
   compartir: {
