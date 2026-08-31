@@ -35,6 +35,7 @@
       <span class="sos-num">123</span>
       <span class="sos-label">LLAMAR AHORA · Emergencias</span>
     </a>
+    <p class="frase-esperanza" id="fraseEsperanza" hidden></p>
 
     <div class="panel" id="panelInicio">
 
@@ -54,6 +55,7 @@
 
       <div class="p-bloque" id="pSosVivo">
         <p class="p-sub">SOS en vivo — si no puedes escribir</p>
+        <p class="calma" id="calmaSos" hidden></p>
         <div class="sv-chips" id="svChips"></div>
         <button id="btnSosVivo" class="sosvivo-activar">🔴 ACTIVAR SOS EN VIVO</button>
         <div id="svPanel" class="oculto">
@@ -94,6 +96,7 @@
       </button>
 
     </div>
+    <p class="disclaimer" id="disclaimerInicio"></p>
   </section>
 
   <!-- ===== EMERGENCIAS ===== -->
@@ -121,6 +124,7 @@
       <div class="triaje-resultado oculto" id="triajeResultado">
         <h3 id="triajeAccion"></h3>
         <p id="triajeMensaje"></p>
+        <p class="disclaimer" id="triajeDisclaimer"></p>
         <div class="fila-botones">
           <a id="triajeLlamar" class="accion rojo" href="tel:123">📞 Llamar al 123</a>
           <button id="triajeGuia" class="accion azul">📖 Ver guía paso a paso</button>
@@ -133,11 +137,12 @@
     <h2 class="titulo-seccion">⛑️ Primeros auxilios</h2>
     <p class="nota">Ante una emergencia médica llama al <a href="tel:123">123</a>. Toca 🔊 para escuchar cada guía.</p>
     <div id="listaAuxilios"><!-- lo llena app.js --></div>
+    <p class="disclaimer" id="disclaimerAuxilios"></p>
   </section>
 
   <!-- ===== AYUDA ===== -->
   <section id="page-ayuda" class="page">
-    <h2 class="titulo-seccion">🎒 Tu casa lista para una emergencia</h2>
+    <h2 class="titulo-seccion">🎒 Tu casa lista para una emergencia <span class="badge-off" data-badge></span></h2>
     <div class="tarjeta" id="checklistHogar">
       <div class="chk-progreso">
         <div class="chk-barra"><div id="chkBarraInterna"></div></div>
@@ -146,7 +151,7 @@
       <div id="chkLista"><!-- lo llena app.js --></div>
     </div>
 
-    <h2 class="titulo-seccion">👨‍👩‍👧 Plan familiar de emergencia</h2>
+    <h2 class="titulo-seccion">👨‍👩‍👧 Plan familiar de emergencia <span class="badge-off" data-badge></span></h2>
     <div class="tarjeta">
       <p class="nota" id="planNota">Llénalo con tu familia HOY, no cuando pase algo. Se guarda solo en tu teléfono.</p>
       <div class="ficha-form">
@@ -214,7 +219,7 @@
       <p class="nota" id="ctcNotaMax"></p>
     </div>
 
-    <h2 class="titulo-seccion">🏥 Ficha médica de emergencia (ICE)</h2>
+    <h2 class="titulo-seccion">🏥 Ficha médica de emergencia (ICE) <span class="badge-off" data-badge></span></h2>
     <div class="tarjeta">
       <p class="nota">Se guarda solo en TU teléfono (privado, no se envía a ningún lado). Si no puedes hablar, quien te ayude puede verla en grande. También se adjunta a tu aviso de "Necesito ayuda".</p>
       <div class="ficha-form">
@@ -261,6 +266,11 @@
         <span>Modo claro (para el día)</span>
         <button id="btnClaro" class="mini">Activar</button>
       </div>
+      <div class="fila-ajuste">
+        <span>🕊️ Mensajes de esperanza</span>
+        <button id="btnEsperanza" class="mini">Activar</button>
+      </div>
+      <p class="nota" id="esperanzaNota"></p>
     </div>
 
     <h2 class="titulo-seccion">📲 Instalar en tu celular</h2>
@@ -290,6 +300,7 @@
   <div class="chooser-caja">
     <p class="chooser-titulo">¿Por dónde?</p>
     <p id="chooserDestino" class="chooser-destino oculto"></p>
+    <p class="chooser-explica" id="chooserExplica"></p>
     <button id="chooserWhatsApp" class="chooser-grande wa"><span>💬</span> WhatsApp<small>rápido, con internet</small></button>
     <button id="chooserSMS" class="chooser-grande sms"><span>✉️</span> SMS<small>funciona sin internet</small></button>
     <button id="chooserCancelar" class="chooser-cancelar">Cancelar</button>
