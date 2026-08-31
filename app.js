@@ -103,6 +103,7 @@ function mostrarChooser(texto, numero, nombreDestino){
     destino.classList.remove("oculto");
   }
   var c=$("chooser"); if(c) c.classList.remove("oculto");
+  var ex=$("chooserExplica"); if(ex) ex.textContent=DATOS.humanidad.explicacionChooser;
 }
 function cerrarChooser(){
   mensajePendiente=null; numeroPendiente=null;
@@ -441,6 +442,10 @@ function activarSosVivo(){
     if(AC) audioCtx=new AC();
   }
   if(audioCtx && audioCtx.state!=="running"){ try{ audioCtx.resume(); }catch(e){} }
+  // explicación previa + calma antes de activar la alarma (objetivo 2 y 3 del diagnóstico)
+  if(!confirm(DATOS.humanidad.explicacionSos)){ return; }
+  $("calmaSos").textContent=DATOS.humanidad.calma;
+  $("calmaSos").hidden=false;
   SV.activo=true;
   SV.enviados={};
   var t=DATOS.sosVivo.tipos.filter(function(x){return x.id===SV.tipo;})[0];
@@ -681,7 +686,11 @@ function triajeResultado(clave){
   $("triajeOpciones").innerHTML="";
   triajeAuxilioPendiente=t.auxilio;
   $("triajeAccion").textContent=t.accion;
-  $("triajeMensaje").textContent=t.mensaje;
+  // calma primero (lineamiento PFA: contención breve antes de instrucción)
+  var calma = (clave==="noRespira") ? DATOS.humanidad.calmaRcp : DATOS.humanidad.calma;
+  $("triajeMensaje").textContent=calma+" "+t.mensaje;
+  var dis=$("triajeDisclaimer");
+  if(dis) dis.textContent=DATOS.humanidad.disclaimer;
   var g=$("triajeGuia");
   if(t.auxilio){ g.classList.remove("oculto"); } else { g.classList.add("oculto"); }
   $("triajeResultado").classList.remove("oculto");
@@ -849,7 +858,7 @@ function compartirApp(){
 /* ============================================================
    ACCESIBILIDAD (letra, contraste, modo claro) — persistido
    ============================================================ */
-var AJUSTES={ fs:17, contraste:false, claro:false };
+var AJUSTES={ fs:17, contraste:false, claro:false, esperanza:false };
 function guardarAjustes(){ try{ localStorage.setItem("sosajustes", JSON.stringify(AJUSTES)); }catch(e){} }
 function cargarAjustes(){
   try{
@@ -863,6 +872,7 @@ function cargarAjustes(){
         }
         if(typeof o.contraste==="boolean") AJUSTES.contraste=o.contraste;
         if(typeof o.claro==="boolean") AJUSTES.claro=o.claro;
+        if(typeof o.esperanza==="boolean") AJUSTES.esperanza=o.esperanza;
       }
     }
   }catch(e){}
@@ -879,6 +889,15 @@ function aplicarAjustes(){
   document.body.classList.toggle("claro", AJUSTES.claro);
   var bc=$("btnContraste"); if(bc) bc.textContent=AJUSTES.contraste?"Desactivar":"Activar";
   var bo=$("btnClaro"); if(bo) bo.textContent=AJUSTES.claro?"Desactivar":"Activar";
+  var be=$("btnEsperanza"); if(be) be.textContent=AJUSTES.esperanza?"Desactivar":"Activar";
+  var fr=$("fraseEsperanza");
+  if(fr){
+    if(AJUSTES.esperanza){
+      var f=DATOS.humanidad.esperanza.frases;
+      fr.textContent="🕊️ "+f[Math.floor(Math.random()*f.length)];
+      fr.hidden=false;
+    } else { fr.hidden=true; }
+  }
 }
 function cambiarLetra(delta){
   AJUSTES.fs=Math.min(24, Math.max(14, AJUSTES.fs+delta));
@@ -1031,6 +1050,12 @@ function renderTodo(){
   renderNacionales(); renderDesastres(); renderCiudades(""); renderAtrapado();
   renderAuxilios(); renderVulnerables(); renderAyudaExtra(); renderAcerca(); renderAccesos();
   renderChecklist(); triajePaso("inicio"); svRenderChips();
+  // humanidad v4.3: disclaimers + badges offline + nota esperanza
+  var d1=$("disclaimerInicio"); if(d1) d1.textContent=DATOS.humanidad.disclaimer;
+  var d2=$("disclaimerAuxilios"); if(d2) d2.textContent=DATOS.humanidad.disclaimer;
+  var badges=document.querySelectorAll("[data-badge]");
+  for(var i=0;i<badges.length;i++) badges[i].textContent=DATOS.humanidad.offlineBadge;
+  var en=$("esperanzaNota"); if(en) en.textContent=DATOS.humanidad.esperanza.nota;
 }
 
 /* ============================================================
@@ -1123,6 +1148,7 @@ function eventos(){
   $("btnLetraMas").addEventListener("click", function(){ cambiarLetra(+1); });
   $("btnContraste").addEventListener("click", function(){ AJUSTES.contraste=!AJUSTES.contraste; aplicarAjustes(); guardarAjustes(); });
   $("btnClaro").addEventListener("click", function(){ AJUSTES.claro=!AJUSTES.claro; aplicarAjustes(); guardarAjustes(); });
+  $("btnEsperanza").addEventListener("click", function(){ AJUSTES.esperanza=!AJUSTES.esperanza; aplicarAjustes(); guardarAjustes(); });
 
   // instalación
   $("btnInstalar").addEventListener("click", instalar);
