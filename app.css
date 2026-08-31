@@ -54,8 +54,9 @@ body{
   color:var(--texto); line-height:1.5;
   font-feature-settings:"tnum" 1; /* números alineados (coordenadas, números de ayuda) */
   background:
-    radial-gradient(1100px 520px at 50% -8%, rgba(212,175,55,.10), transparent 60%),
+    radial-gradient(1100px 520px at 50% -8%, rgba(212,175,55,.13), transparent 62%),
     radial-gradient(820px 460px at 100% 0%, rgba(255,95,82,.07), transparent 55%),
+    radial-gradient(600px 300px at 0% 100%, rgba(212,175,55,.04), transparent 60%),
     linear-gradient(180deg, var(--fondo-2), var(--fondo));
   background-attachment:fixed;
   min-height:100vh;
@@ -94,7 +95,8 @@ body.claro #topbar{
   display:inline-flex; align-items:center; justify-content:center;
   width:42px; height:42px; border-radius:13px; font-size:1.35rem;
   background:linear-gradient(135deg, var(--rojo), var(--rojo-osc));
-  box-shadow:0 4px 14px rgba(192,57,43,.45), inset 0 1px 0 rgba(255,255,255,.25);
+  border:1px solid rgba(212,175,55,.35);
+  box-shadow:0 4px 14px rgba(192,57,43,.45), inset 0 1px 0 rgba(255,255,255,.25), 0 0 12px rgba(212,175,55,.15);
 }
 .topbar-text{flex:1; line-height:1.15}
 .topbar-text strong{font-size:1rem; letter-spacing:.3px}
@@ -165,6 +167,12 @@ body.claro .icon-btn{background:rgba(20,32,46,.05)}
   font-size:.88rem; font-weight:800; padding:8px 8px;
   min-height:40px; cursor:pointer; line-height:1.2; letter-spacing:.2px;
   transition:transform .12s ease, filter .12s ease, box-shadow .2s ease;
+}
+.accion{position:relative; overflow:hidden}
+.accion::before{
+  content:""; position:absolute; top:0; left:8%; right:8%; height:38%;
+  background:linear-gradient(180deg, rgba(255,255,255,.28), rgba(255,255,255,0));
+  border-radius:inherit; pointer-events:none;
 }
 .accion:active{transform:translateY(1px); filter:brightness(.9)}
 .accion.rojo{background:linear-gradient(135deg,#ff6b5e,#c0392b); box-shadow:0 6px 18px rgba(192,57,43,.38)}
@@ -298,6 +306,11 @@ body.claro .tarjeta, body.claro .tip, body.claro .aviso{
 .mini:active{filter:brightness(.9)}
 
 /* ============ NAVEGACIÓN INFERIOR ============ */
+#navInferior::before{
+  content:""; position:absolute; top:0; left:12%; right:12%; height:1.5px;
+  background:linear-gradient(90deg, transparent, rgba(212,175,55,.55), transparent);
+}
+.nav-btn.activo .nav-ico{filter:drop-shadow(0 0 8px rgba(212,175,55,.45))}
 #navInferior{
   position:fixed; bottom:0; left:0; right:0; z-index:60;
   display:flex;
@@ -327,10 +340,12 @@ body.claro #navInferior{
 }
 .nav-btn .nav-ico{font-size:1.4rem; transition:transform .18s ease}
 .nav-btn .nav-txt{font-size:.68rem; font-weight:700; letter-spacing:.2px}
-.nav-btn.activo{color:var(--oro)}
+.nav-btn.activo{
+  --pill:1;color:var(--oro)}
 .nav-btn.activo::before{transform:translateX(-50%) scaleX(1)}
 .nav-btn.activo .nav-ico{transform:translateY(-2px)}
-body.claro .nav-btn.activo{color:var(--oro-oscuro)}
+body.claro .nav-btn.activo{
+  --pill:1;color:var(--oro-oscuro)}
 
 /* ============ OVERLAY LUZ SOS ============ */
 #overlayLuz{
@@ -598,10 +613,10 @@ body.claro .emergencia-falsa{box-shadow:0 10px 26px rgba(192,57,43,.35)}
 .panel{
   position:relative;
   background:linear-gradient(180deg, var(--tarjeta-2), var(--tarjeta));
-  border:1px solid var(--borde);
+  border:1px solid rgba(212,175,55,.22);
   border-radius:16px;
   overflow:hidden;
-  box-shadow:var(--sombra), inset 0 1px 0 rgba(255,255,255,.045);
+  box-shadow:var(--sombra), inset 0 1px 0 rgba(255,255,255,.045), 0 0 0 1px rgba(0,0,0,.12);
 }
 .panel::before{
   content:""; position:absolute; top:0; left:14px; right:14px; height:1.5px;
