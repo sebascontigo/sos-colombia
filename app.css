@@ -751,6 +751,34 @@ body.claro .sv-ubic{color:var(--oro-oscuro)}
 }
 .sosvivo-detener:hover{border-color:var(--rojo); color:var(--rojo)}
 
+/* ============ HUMANIDAD v4.3 ============ */
+.calma{
+  font-size:.85rem; color:var(--oro-claro); font-weight:700;
+  margin:0 0 8px; line-height:1.4;
+}
+body.claro .calma{color:var(--oro-oscuro)}
+.disclaimer{
+  font-size:.72rem; color:var(--texto-suave); opacity:.85;
+  margin:14px 2px 4px; line-height:1.45; text-align:center;
+}
+.badge-off{
+  display:inline-block; vertical-align:middle;
+  font-size:.62rem; font-weight:800; letter-spacing:.05em;
+  color:var(--verde); background:rgba(30,132,73,.14);
+  border:1px solid rgba(30,132,73,.35); border-radius:999px;
+  padding:2px 7px; margin-left:6px;
+}
+.frase-esperanza{
+  font-size:.9rem; color:var(--oro-claro); font-style:italic;
+  text-align:center; margin:10px 14px 4px; line-height:1.5;
+}
+body.claro .frase-esperanza{color:var(--oro-oscuro)}
+.chooser-explica{
+  font-size:.76rem; color:var(--texto-suave); text-align:center;
+  margin:2px 0 8px;
+}
+#esperanzaNota{margin:4px 0 0; font-size:.74rem}
+
 /* pantallas anchas: centrar nav */
 @media(min-width:720px){
   #navInferior{max-width:720px; left:50%; transform:translateX(-50%); border-radius:18px 18px 0 0}
