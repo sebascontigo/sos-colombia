@@ -2,9 +2,16 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
+<!-- CSP: la app es 100% local (0 recursos externos, 0 manejadores en línea, 0 iframes),
+     así que se puede bloquear todo lo que no nazca de su propio origen.
+     Ojo: frame-ancestors y sandbox están ignorados por la vía <meta>; si el canal final
+     permite cabeceras (Netlify _headers, Cloudflare, Pages con headers), añadir allí
+     "Content-Security-Policy: ... frame-ancestors 'none'" como refuerzo. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' blob: data:; manifest-src 'self'; worker-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="description" content="SOS Colombia: guía de emergencia y ayuda comunitaria. Gratis, sin internet y sin recolectar datos.">
 <meta name="theme-color" content="#0b1220">
+<meta name="color-scheme" content="dark">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <title>SOS Colombia — Emergencias</title>
@@ -12,12 +19,14 @@
 </head>
 <body>
 
+<a class="saltar" href="#contenido">Saltar al contenido</a>
+
 <!-- ============ HEADER ============ -->
 <header id="topbar">
   <div class="topbar-inner">
     <span class="logo">🆘</span>
     <div class="topbar-text">
-      <strong>SOS Colombia</strong>
+      <h1>SOS Colombia</h1>
       <small id="estadoRed">Guía de emergencia</small>
     </div>
     <button id="btnSilbatoTop" class="icon-btn oro" aria-label="Silbato de emergencia" title="Silbato SOS">📣</button>
@@ -108,8 +117,9 @@
     <div id="listaDesastres"><!-- lo llena app.js --></div>
 
     <h2 class="titulo-seccion">📍 Números por ciudad</h2>
-    <input type="search" id="buscadorCiudad" class="buscador" placeholder="Busca tu ciudad…">
-    <div id="listaCiudades"><!-- lo llena app.js --></div>
+    <label class="visualmente-oculto" for="buscadorCiudad">Escribe tu ciudad para ver sus números de emergencia</label>
+    <input type="search" id="buscadorCiudad" class="buscador" placeholder="Busca tu ciudad…" autocomplete="off" aria-controls="listaCiudades">
+    <div id="listaCiudades" aria-live="polite"><!-- lo llena app.js --></div>
 
     <h2 class="titulo-seccion">🧱 Si estás atrapado</h2>
     <div class="tarjeta" id="atrapado"><!-- lo llena app.js --></div>
@@ -200,6 +210,16 @@
       <button id="btnLuzSOS" class="accion amarillo">💡 Luz SOS</button>
     </div>
     <p class="nota">El silbato y la luz funcionan sin internet y ayudan a que te encuentren.</p>
+
+    <h2 class="titulo-seccion">💾 Mis datos</h2>
+    <p class="nota">Todo se queda en este teléfono: la ficha médica, los contactos, el checklist y el plan. Si cambias de celular o borras los datos del navegador, se pierden. Exporta un respaldo y guárdalo donde sí puedas recuperarlo.</p>
+    <div class="fila-botones">
+      <button id="btnExportarDatos" class="accion azul">⬇️ Exportar respaldo</button>
+      <button id="btnImportarDatos" class="accion verde">⬆️ Restaurar respaldo</button>
+    </div>
+    <label class="visualmente-oculto" for="archivoImportar">Archivo JSON de respaldo</label>
+    <input type="file" id="archivoImportar" accept="application/json,.json" class="visualmente-oculto">
+    <p class="nota" id="estadoRespaldo" aria-live="polite"></p>
 
     <h2 class="titulo-seccion">👥 Tus contactos de emergencia</h2>
     <div class="tarjeta">
@@ -326,7 +346,7 @@
 </div>
 
 <!-- ============ OVERLAY LUZ SOS ============ -->
-<div id="overlayLuz" class="oculto" aria-hidden="true">
+<div id="overlayLuz" class="oculto" role="dialog" aria-modal="true" aria-label="Luz SOS activada">
   <button id="cerrarLuz" class="btn-cerrar-luz">✕ Detener luz SOS</button>
 </div>
 

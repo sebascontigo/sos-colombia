@@ -1,5 +1,6 @@
 /* ============================================================
-   SOS Colombia — sw.js (service worker v6)
+   SOS Colombia — sw.js
+   CACHE es la única versión que manda aquí; la de la app vive en datos.js → app.version.
    Cache versionado de TODOS los archivos para uso 100% offline.
    Estrategia: cache-first con respaldo de red y actualización.
    v6: app potenciada — asistente de triaje "¿qué hago ahora?",
@@ -31,7 +32,14 @@
         en toda la app y compactado real (fs 14, botones 40,
         chips 32, topbar/nav finos).
    ============================================================ */
-var CACHE = "sos-colombia-v19";
+/* v20 (2026-09-19 · C-001 Fase 2 "seguridad del aviso"):
+   - ubicación con un único tipo canónico: el aviso SOS ya no puede salir con
+     "undefined,undefined" ni copiar "[object Object]".
+   - texto de GPS bloqueado corregido (apuntaba a una clave inexistente).
+   - la sirena visual vuelve a existir: apuntaba a un id que no estaba en el DOM.
+   - esc() cubre comillas (atributos) y la luz SOS es idempotente.
+   - si el teléfono no deja guardar, ahora se avisa en vez de perder el dato. */
+var CACHE = "sos-colombia-v28";
 var ARCHIVOS = [
   "./",
   "./index.html",

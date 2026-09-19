@@ -1,5 +1,5 @@
 /* ============================================================
-   SOS Colombia — app.css  (v2.3 · interfaz premium)
+   SOS Colombia — app.css  (interfaz premium · la versión de la app vive en datos.js → meta.version)
    Tema OSCURO premium por defecto + modo claro (día) + alto contraste.
    Estética de lujo: azul-noche profundo, acentos dorados, profundidad,
    micro-animaciones. Sin fuentes externas: solo fuentes del sistema.
@@ -8,10 +8,9 @@
 :root{
   /* ---- paleta semántica (sobre fondo oscuro) ---- */
   --rojo:#ff5f52;  --rojo-osc:#c0392b;
-  --verde:#34d399; --verde-osc:#1e8449;
-  --azul:#5eb3f6;  --azul-osc:#1f618d;
-  --amarillo:#f0c040; --amarillo-osc:#b9770e;
-  --whatsapp:#25d366;
+  --verde:#34d399;
+  --azul:#5eb3f6;
+  --amarillo:#f0c040;
   /* ---- oro (eco de la tarjeta C-004) ---- */
   --oro:#d4af37; --oro-claro:#f5e08c; --oro-oscuro:#a8802a;
   /* ---- superficies OSCURAS (tema por defecto) ---- */
@@ -22,13 +21,20 @@
   --sombra:0 6px 18px rgba(0,0,0,.35);
   --radio:18px;
   --fs:14px;
+  /* ---- degradados de acento: sobre ellos el blanco #fff siempre mide ≥4.5:1
+         (medido con dev/medir_ui.mjs sobre el píxel pintado, no sobre el hex) ---- */
+  --grad-rojo:linear-gradient(135deg,#d63a2c,#8f2418);
+  --grad-verde:linear-gradient(135deg,#157a41,#0c5730);
+  --grad-azul:linear-gradient(135deg,#1a5f8a,#123f5d);
+  --grad-ambar:linear-gradient(135deg,#946008,#6b4506);
+  /* verde WhatsApp brand (#25d366) descartado: blanco sobre él mide 2.4:1 */
+  --grad-whatsapp:linear-gradient(135deg,#0f7a41,#0a5c31);
 }
 
 /* ---- MODO CLARO (para exteriores / plena luz) ---- */
 body.claro{
   --rojo:#d64541; --rojo-osc:#b03330;
   --verde:#1e8449; --azul:#1f618d; --amarillo:#b9770e;
-  --whatsapp:#128c4b;
   --fondo:#eef1f6; --fondo-2:#e7ecf3;
   --tarjeta:#ffffff; --tarjeta-2:#f6f8fb;
   --texto:#14202e; --texto-suave:#51617a;
@@ -48,6 +54,8 @@ body.contraste{
 body.contraste .tarjeta, body.contraste .tip, body.contraste .aviso{ border:2px solid #fff; }
 
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+/* Regla del proyecto: todo control táctil mide ≥48 px (medido con dev/medir_ui.mjs) */
+input,select,textarea{min-height:48px}
 html{font-size:var(--fs)}
 body{
   font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
@@ -99,12 +107,12 @@ body.claro #topbar{
   box-shadow:0 4px 14px rgba(192,57,43,.45), inset 0 1px 0 rgba(255,255,255,.25), 0 0 12px rgba(212,175,55,.15);
 }
 .topbar-text{flex:1; line-height:1.15}
-.topbar-text strong{font-size:1rem; letter-spacing:.3px}
+.topbar-text strong, .topbar-text h1{font-size:1rem; letter-spacing:.3px}
 .topbar-text small{display:block; font-size:.74rem; color:var(--texto-suave)}
 .icon-btn{
   background:rgba(255,255,255,.08); color:var(--texto);
   border:1px solid var(--borde);
-  width:44px; height:44px; border-radius:13px; font-size:1.15rem; cursor:pointer;
+  width:48px; height:48px; border-radius:13px; font-size:1.2rem; cursor:pointer;
   transition:background .15s ease, transform .12s ease;
 }
 .icon-btn:active{background:rgba(255,255,255,.18); transform:scale(.96)}
@@ -141,7 +149,7 @@ body.claro .icon-btn{background:rgba(20,32,46,.05)}
 .sos-grande{
   position:relative;
   display:flex; align-items:center; justify-content:center; gap:18px;
-  background:linear-gradient(135deg, #ff6b5e, #e74c3c 45%, #c0392b);
+  background:var(--grad-rojo);
   color:#fff; text-decoration:none;
   border-radius:24px; padding:24px 18px; margin-bottom:14px;
   box-shadow:0 12px 32px rgba(231,76,60,.40), inset 0 1px 0 rgba(255,255,255,.28);
@@ -165,7 +173,7 @@ body.claro .icon-btn{background:rgba(20,32,46,.05)}
 .accion{
   flex:1; border:none; border-radius:12px; color:#fff;
   font-size:.88rem; font-weight:800; padding:8px 8px;
-  min-height:40px; cursor:pointer; line-height:1.2; letter-spacing:.2px;
+  min-height:48px; cursor:pointer; line-height:1.2; letter-spacing:.2px;
   transition:transform .12s ease, filter .12s ease, box-shadow .2s ease;
 }
 .accion{position:relative; overflow:hidden}
@@ -175,11 +183,10 @@ body.claro .icon-btn{background:rgba(20,32,46,.05)}
   border-radius:inherit; pointer-events:none;
 }
 .accion:active{transform:translateY(1px); filter:brightness(.9)}
-.accion.rojo{background:linear-gradient(135deg,#ff6b5e,#c0392b); box-shadow:0 6px 18px rgba(192,57,43,.38)}
-.accion.verde{background:linear-gradient(135deg,#34d399,#1e8449); box-shadow:0 6px 18px rgba(30,132,73,.38)}
-.accion.azul{background:linear-gradient(135deg,#5eb3f6,#1f618d); box-shadow:0 6px 18px rgba(31,97,141,.38)}
-.accion.amarillo{background:linear-gradient(135deg,#f0c040,#b9770e); box-shadow:0 6px 18px rgba(185,119,14,.38)}
-.accion.whatsapp{background:linear-gradient(135deg,#25d366,#128c4b); box-shadow:0 6px 18px rgba(18,140,75,.38); width:100%}
+.accion.rojo{background:var(--grad-rojo); box-shadow:0 6px 18px rgba(192,57,43,.38)}
+.accion.verde{background:var(--grad-verde); box-shadow:0 6px 18px rgba(30,132,73,.38)}
+.accion.azul{background:var(--grad-azul); box-shadow:0 6px 18px rgba(31,97,141,.38)}
+.accion.amarillo{background:var(--grad-ambar); box-shadow:0 6px 18px rgba(185,119,14,.38)}
 
 /* ============ TARJETAS ============ */
 .tarjeta, .tip, .aviso{
@@ -201,7 +208,7 @@ body.claro .tarjeta, body.claro .tip, body.claro .aviso{
 /* ============ NÚMEROS DE LLAMADA ============ */
 .llamada{
   display:flex; align-items:center; justify-content:space-between; gap:10px;
-  background:linear-gradient(135deg,#34d399,#1e8449);
+  background:var(--grad-verde);
   color:#fff; text-decoration:none;
   padding:14px 16px; border-radius:15px; margin-bottom:10px; font-weight:700;
   box-shadow:0 5px 16px rgba(30,132,73,.32);
@@ -210,12 +217,13 @@ body.claro .tarjeta, body.claro .tip, body.claro .aviso{
 .llamada:active{transform:translateY(1px); filter:brightness(.9)}
 .llamada .num{font-size:1.55rem; font-weight:900; letter-spacing:1px}
 .llamada small{display:block; font-weight:400; font-size:.78rem; opacity:.95}
-.llamada.rojo{background:linear-gradient(135deg,#ff6b5e,#c0392b); box-shadow:0 5px 16px rgba(192,57,43,.32)}
-.llamada.azul{background:linear-gradient(135deg,#5eb3f6,#1f618d); box-shadow:0 5px 16px rgba(31,97,141,.32)}
-.llamada.amarillo{background:linear-gradient(135deg,#f0c040,#b9770e); box-shadow:0 5px 16px rgba(185,119,14,.32)}
+.llamada.rojo{background:var(--grad-rojo); box-shadow:0 5px 16px rgba(192,57,43,.32)}
+.llamada.azul{background:var(--grad-azul); box-shadow:0 5px 16px rgba(31,97,141,.32)}
+.llamada.amarillo{background:var(--grad-ambar); box-shadow:0 5px 16px rgba(185,119,14,.32)}
 
 /* ============ GRID ACCESOS RÁPIDOS ============ */
 .grid-accesos{display:grid; grid-template-columns:repeat(2,1fr); gap:11px}
+@media (max-width:340px){ .grid-accesos{grid-template-columns:1fr} }
 .acceso{
   background:linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,0)), var(--tarjeta);
   border:1px solid var(--borde);
@@ -265,7 +273,7 @@ body.claro .tarjeta, body.claro .tip, body.claro .aviso{
   cursor:pointer; transition:all .15s ease;
 }
 .mini-tabs button.activo{
-  background:linear-gradient(135deg,#ff6b5e,#c0392b); color:#fff; border-color:transparent;
+  background:var(--grad-rojo); color:#fff; border-color:transparent;
   box-shadow:0 4px 12px rgba(192,57,43,.35);
 }
 .paso-lista{margin:0 0 0 20px}
@@ -273,13 +281,21 @@ body.claro .tarjeta, body.claro .tip, body.claro .aviso{
 
 /* botón voz por sección */
 .btn-voz{
-  background:linear-gradient(135deg,#5eb3f6,#1f618d); color:#fff;
+  background:var(--grad-azul); color:#fff;
   border:none; border-radius:11px;
   padding:9px 15px; font-size:.85rem; font-weight:800; cursor:pointer; margin:6px 0;
+  min-height:48px; display:inline-flex; align-items:center; gap:6px;
   box-shadow:0 4px 12px rgba(31,97,141,.32);
 }
 .btn-voz:active{filter:brightness(.9)}
-.btn-voz.detener{background:linear-gradient(135deg,#ff6b5e,#c0392b)}
+.btn-voz.detener{background:var(--grad-rojo)}
+
+/* Un teléfono suelto dentro de un párrafo también se toca con el pulgar:
+   se vuelve pastilla tocable sin romper la línea (negativo margen compensa). */
+p a[href^="tel:"], li a[href^="tel:"]{
+  display:inline-block; min-height:44px; padding:12px 16px; margin:-12px -16px;
+  line-height:1.35; font-weight:800; text-decoration:underline;
+}
 
 /* ============ BUSCADOR ============ */
 .buscador{
@@ -290,7 +306,7 @@ body.claro .tarjeta, body.claro .tip, body.claro .aviso{
 
 /* ============ AJUSTES ============ */
 .ajustes .fila-ajuste{
-  min-height:44px;
+  min-height:48px;
 
   display:flex; align-items:center; justify-content:space-between;
   padding:11px 0; border-bottom:1px solid var(--borde); min-height:54px;
@@ -298,10 +314,10 @@ body.claro .tarjeta, body.claro .tip, body.claro .aviso{
 .ajustes .fila-ajuste:last-child{border-bottom:none}
 .ajustes .grupo{display:flex; gap:6px}
 .mini{
-  background:linear-gradient(135deg,#5eb3f6,#1f618d); color:#fff;
+  background:var(--grad-azul); color:#fff;
   border:none; border-radius:11px;
   padding:9px 14px; font-size:.9rem; font-weight:800; cursor:pointer;
-  min-width:48px; min-height:44px;
+  min-width:48px; min-height:48px;
 }
 .mini:active{filter:brightness(.9)}
 
@@ -341,11 +357,10 @@ body.claro #navInferior{
 .nav-btn .nav-ico{font-size:1.4rem; transition:transform .18s ease}
 .nav-btn .nav-txt{font-size:.68rem; font-weight:700; letter-spacing:.2px}
 .nav-btn.activo{
-  --pill:1;color:var(--oro)}
+color:var(--oro)}
 .nav-btn.activo::before{transform:translateX(-50%) scaleX(1)}
 .nav-btn.activo .nav-ico{transform:translateY(-2px)}
-body.claro .nav-btn.activo{
-  --pill:1;color:var(--oro-oscuro)}
+body.claro .nav-btn.activo{color:#6b4e14}
 
 /* ============ OVERLAY LUZ SOS ============ */
 #overlayLuz{
@@ -355,7 +370,7 @@ body.claro .nav-btn.activo{
 #overlayLuz.destello{background:#fff}
 #overlayLuz.oculto{display:none}
 .btn-cerrar-luz{
-  background:linear-gradient(135deg,#ff6b5e,#c0392b); color:#fff;
+  background:var(--grad-rojo); color:#fff;
   border:none; border-radius:15px;
   padding:16px 24px; font-size:1rem; font-weight:800; cursor:pointer; min-height:56px;
   box-shadow:0 6px 18px rgba(192,57,43,.4);
@@ -395,13 +410,13 @@ body.claro .nav-btn.activo{
 .chooser-grande:active{transform:translateY(1px)}
 .chooser-grande span{font-size:1.6rem}
 .chooser-grande small{display:block; font-size:.78rem; font-weight:600; opacity:.9; margin-top:2px}
-.chooser-grande.wa{background:linear-gradient(160deg,#25d366,#128c4b); box-shadow:0 8px 22px rgba(18,140,75,.4)}
-.chooser-grande.sms{background:linear-gradient(160deg,#4aa3df,#1f618d); box-shadow:0 8px 22px rgba(31,97,141,.4)}
+.chooser-grande.wa{background:var(--grad-whatsapp); box-shadow:0 8px 22px rgba(18,140,75,.4)}
+.chooser-grande.sms{background:var(--grad-azul); box-shadow:0 8px 22px rgba(31,97,141,.4)}
 .chooser-caja .accion{width:100%}
 .chooser-caja small{display:block; font-weight:400; font-size:.72rem; opacity:.92}
 .chooser-cancelar{
   background:none; border:none; color:var(--texto-suave);
-  font-size:.9rem; font-weight:700; padding:10px; cursor:pointer; min-height:44px;
+  font-size:.95rem; font-weight:700; padding:10px; cursor:pointer; min-height:48px;
 }
 .chooser-destino{
   font-size:.85rem; color:var(--texto-suave); text-align:center;
@@ -431,7 +446,7 @@ body.claro .ubic-coords{color:var(--oro-oscuro)}
 }
 .ficha-form input:focus, .ficha-form select:focus{outline:2px solid var(--oro); border-color:transparent}
 .btn-metronomo{
-  background:linear-gradient(135deg,#ff6b5e,#c0392b); color:#fff;
+  background:var(--grad-rojo); color:#fff;
   border:none; border-radius:12px;
   padding:11px 14px; font-size:.9rem; font-weight:800; cursor:pointer; margin:6px 0; width:100%;
   box-shadow:0 4px 14px rgba(192,57,43,.35);
@@ -473,11 +488,6 @@ body.claro .ubic-coords{color:var(--oro-oscuro)}
   box-shadow:0 8px 26px rgba(0,0,0,.4); text-align:center;
 }
 #toast.oculto{display:none}
-
-.caption{
-  font-size:.78rem; color:var(--texto-suave);
-  margin:3px 2px 10px; line-height:1.35;
-}
 .oculto{display:none !important}
 
 /* ============ ASISTENTE DE TRIAJE (¿qué hago ahora?) ============ */
@@ -552,32 +562,9 @@ body.claro .chk-barra{background:rgba(20,32,46,.08)}
 #planConsejo{margin-bottom:0}
 #planNota{margin-top:0}
 
-/* ============ BOTÓN DE EMERGENCIA (avisar a contactos) ============ */
-.emergencia-falsa{
-  display:flex; align-items:center; justify-content:center; gap:12px;
-  width:100%; margin:14px 0 4px; padding:20px 16px;
-  border:2px solid rgba(255,255,255,.14); border-radius:20px;
-  cursor:pointer; position:relative; overflow:hidden;
-  background:linear-gradient(160deg, #e74c3c, #c0392b 45%, #96281b);
-  color:#fff; font-weight:900;
-  box-shadow:0 10px 30px rgba(192,57,43,.45), inset 0 1px 0 rgba(255,255,255,.22);
-}
-.emergencia-falsa::before{
-  content:""; position:absolute; inset:0;
-  background:radial-gradient(420px 120px at 50% -20%, rgba(255,255,255,.28), transparent 70%);
-  pointer-events:none;
-}
-.emergencia-falsa::after{
-  content:""; position:absolute; inset:0; border-radius:20px;
-  border:2px solid rgba(255,95,82,.55);
-  animation:pulsoSOS 2.6s ease-in-out infinite;
-  pointer-events:none;
-}
-.emergencia-falsa:active{transform:translateY(1px)}
-.ef-num{font-size:2rem; line-height:1}
-.ef-txt{font-size:1.15rem; letter-spacing:.04em; text-align:left}
-.ef-txt small{display:block; font-size:.78rem; font-weight:600; opacity:.85; letter-spacing:.02em}
-body.claro .emergencia-falsa{box-shadow:0 10px 26px rgba(192,57,43,.35)}
+/* ============ BOTÓN DE EMERGENCIA (avisar a contactos) ============
+   (las reglas .emergencia-falsa / .ef-num / .ef-txt se eliminaron el 2026-09-19:
+    0 referencias en index.html, app.js y datos.js. El botón real es .accion.rojo.) */
 
 /* ============ CONTACTOS DE EMERGENCIA ============ */
 .ctc-item, .ctc-elegir{
@@ -601,7 +588,7 @@ body.claro .emergencia-falsa{box-shadow:0 10px 26px rgba(192,57,43,.35)}
 .ctc-datos strong{font-size:1rem; font-weight:800; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
 .ctc-datos small{font-size:.82rem; color:var(--texto-suave); overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
 .ctc-borrar{
-  flex:0 0 auto; min-width:44px; height:44px; border-radius:12px;
+  flex:0 0 auto; min-width:48px; height:48px; border-radius:12px;
   border:1px solid var(--borde); background:transparent; font-size:1.05rem;
   color:var(--texto-suave); cursor:pointer;
 }
@@ -662,25 +649,24 @@ body.claro .emergencia-falsa{box-shadow:0 10px 26px rgba(192,57,43,.35)}
 .p-txt small{font-size:.72rem; color:var(--texto-suave); line-height:1.3; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
 .p-flecha{flex:0 0 auto; font-size:1.15rem; color:var(--texto-suave); font-weight:700}
 #panelInicio .fila-botones{margin:0}
-#panelInicio .sosvivo-activar{min-height:46px; font-size:.95rem; margin-top:6px}
+#panelInicio .sosvivo-activar{min-height:48px; font-size:.95rem; margin-top:6px}
 #panelInicio .sv-chips{margin-bottom:8px}
 #panelInicio .ubic-coords{padding:0 12px 8px; font-size:.85rem}
 #panelInicio .ubic-precision{padding:0 12px 8px}
 #panelInicio #pUbicBotones{padding:0 12px 10px; margin:0}
 
 /* ============ SOS EN VIVO ============ */
+/* S3: el destello debe verse aunque el panel no tenga borde propio.
+   outline no desplaza layout (a diferencia de border) y respeta reduced-motion abajo. */
 .sv-flash{
-  border-color:var(--rojo) !important;
-  box-shadow:0 0 0 3px rgba(231,76,60,.35), 0 0 40px rgba(231,76,60,.35) !important;
+  outline:3px solid var(--rojo);
+  outline-offset:2px;
+  box-shadow:0 0 0 3px rgba(231,76,60,.35), 0 0 40px rgba(231,76,60,.45);
 }
-.sosvivo-caja{
-  border:1px solid rgba(255,95,82,.35);
-  box-shadow:0 6px 22px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.04);
-}
-.sv-label{font-weight:800; margin:2px 0 10px; color:var(--texto)}
 .sv-chips{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px}
 .sv-chip{
-  min-height:32px; padding:3px 10px; border-radius:999px;
+  position:relative;
+  min-height:48px; padding:4px 12px; border-radius:999px;
   font-size:.78rem; font-weight:700; color:var(--texto);
   background:linear-gradient(135deg, var(--tarjeta-2), var(--tarjeta));
   border:1.5px solid var(--borde); cursor:pointer;
@@ -697,7 +683,7 @@ body.claro .sv-chip.activo{color:var(--oro-oscuro)}
 .sosvivo-activar{
   width:100%; min-height:64px; border-radius:18px;
   border:2px solid rgba(255,255,255,.16);
-  background:linear-gradient(160deg, #e74c3c, #a93226);
+  background:var(--grad-rojo);
   color:#fff; font-size:1.12rem; font-weight:900; letter-spacing:.04em;
   cursor:pointer;
   box-shadow:0 10px 28px rgba(169,50,38,.5), inset 0 1px 0 rgba(255,255,255,.2);
@@ -727,7 +713,6 @@ body.claro .sv-estado strong{color:#96281b}
 }
 body.claro .sv-ubic{color:var(--oro-oscuro)}
 .sv-sirena{font-size:.88rem; color:var(--texto-suave); margin:0 0 12px}
-.sv-cola-titulo{font-size:.9rem; font-weight:700; color:var(--texto); margin:0 0 8px}
 .sv-cola-sub{font-size:.85rem; font-weight:800; color:var(--texto-suave); margin:0 0 8px; text-transform:uppercase; letter-spacing:.05em}
 .sv-item{
   display:flex; align-items:center; gap:12px; width:100%;
@@ -763,11 +748,12 @@ body.claro .calma{color:var(--oro-oscuro)}
 }
 .badge-off{
   display:inline-block; vertical-align:middle;
-  font-size:.62rem; font-weight:800; letter-spacing:.05em;
+  font-size:.70rem; font-weight:800; letter-spacing:.05em;
   color:var(--verde); background:rgba(30,132,73,.14);
   border:1px solid rgba(30,132,73,.35); border-radius:999px;
-  padding:2px 7px; margin-left:6px;
+  padding:3px 8px; margin-left:6px;
 }
+body.claro .badge-off{color:#0f5c33; background:rgba(15,92,51,.10); border-color:rgba(15,92,51,.38)}
 .frase-esperanza{
   font-size:.9rem; color:var(--oro-claro); font-style:italic;
   text-align:center; margin:10px 14px 4px; line-height:1.5;
@@ -805,3 +791,29 @@ input:focus, select:focus, .buscador:focus{
 @media (prefers-reduced-motion: reduce){
   *{animation:none !important; transition:none !important}
 }
+
+/* ============ A11y Fase 3 (2026-09-19) ============ */
+/* El botón del ciclo RCP se generaba desde JS con una clase que no existía en
+   CSS: texto negro heredado sobre tarjeta oscura (1,12:1 medido). */
+.btn-rcp-ciclo{
+  min-height:48px; width:100%; margin-top:8px; padding:10px 14px; border:0;
+  border-radius:12px; background:var(--rojo); color:#0b1220;
+  font-size:.88rem; font-weight:800; cursor:pointer;
+}
+/* Los enlaces tampoco tenían color: azul por defecto del navegador sobre fondo
+   oscuro (1,99:1 medido). */
+a{color:var(--azul)}
+.visualmente-oculto{
+  position:absolute; width:1px; height:1px; margin:-1px; padding:0;
+  overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0;
+}
+.saltar{
+  position:absolute; left:8px; top:-56px; z-index:60;
+  background:var(--oro); color:#12100a; padding:10px 14px;
+  border-radius:10px; font-weight:800; text-decoration:none;
+  transition:top .15s ease;
+}
+.saltar:focus{top:8px}
+/* Área tátil del chip sin agrandarlo visualmente: WCAG 2.5.5 permite ampliar
+   el objetivo por encima del borde visible. */
+.sv-chip::after{content:""; position:absolute; inset:-4px -3px; border-radius:999px}

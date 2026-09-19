@@ -9,9 +9,73 @@
 
 /* ---------- utilidades ---------- */
 function $(id){ return document.getElementById(id); }
-function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+/* S4: esc() cubre comillas porque se usa también dentro de atributos
+   (value="...", title="...", href="..."). Sin esto, una ficha con comillas
+   rompía el HTML o inyectaba atributos. */
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;"); }
 
 var toastTimer=null;
+
+/* ---------- S6: diagnósticos y persistencia con aviso ----------
+   Había 22 catch vacíos; en concreto los de guardar() podían perder la ficha
+   médica o los contactos sin decir nada. Ahora fallar se ve y se registra. */
+var DIAG=[]; var avisoFalloLS=false;
+function diag(m){ DIAG.push({t:new Date().toISOString(), m:String(m).slice(0,200)}); if(DIAG.length>50) DIAG.shift(); }
+function guardarLS(clave, valor, etiqueta){
+  try{ localStorage.setItem(clave, JSON.stringify(valor)); return true; }
+  catch(e){
+    diag("no se pudo guardar "+clave+" ("+((e&&e.name)||e)+")");
+    if(!avisoFalloLS){ avisoFalloLS=true;
+      toast("⚠️ Este teléfono no deja guardar ("+(etiqueta||clave)+"). Anota el dato antes de cerrar la app.", 7000); }
+    return false;
+  }
+}
+/* ---------- A11y Fase 3: kit de modal ----------
+   Los 4 overlays se muestran y ocultan cambiando .oculto en 8 sitios distintos
+   (chooser de canal, chooser de contacto, ficha grande y luz SOS). En vez de
+   reescribir los 8, un observador central aporta lo que les faltaba para ser
+   diálogos accesibles: foco al abrir, cierre con Escape, fondo inerte y
+   devolución del foco al disparador. */
+var MODALES=["chooser","chooserContacto","overlayFicha","overlayLuz"];
+var INERTABLES=["contenido","topbar","navInferior"];
+var ultimoFoco={};
+function botonCerrarModal(el){
+  return el.querySelector("#chooserCancelar,#chooserContactoCancelar,#cerrarFicha,#cerrarLuz")
+      || el.querySelector("button,a,input,select,textarea");
+}
+function modalAbrir(id,el){
+  ultimoFoco[id]=document.activeElement;
+  el.removeAttribute("aria-hidden");
+  INERTABLES.forEach(function(x){ var n=$(x); if(n) n.setAttribute("inert",""); });
+  var objetivo=el.querySelector("[autofocus]")||botonCerrarModal(el);
+  if(objetivo){ setTimeout(function(){ try{ objetivo.focus(); }catch(e){ diag("foco modal "+id); } },0); }
+}
+function modalCerrar(id,el){
+  INERTABLES.forEach(function(x){ var n=$(x); if(n) n.removeAttribute("inert"); });
+  var origen=ultimoFoco[id];
+  if(origen && document.contains(origen)){ setTimeout(function(){ try{ origen.focus(); }catch(e){} },0); }
+  ultimoFoco[id]=null;
+}
+function vigilarModales(){
+  MODALES.forEach(function(id){
+    var el=$(id); if(!el) return;
+    if(el.getAttribute("role")!=="dialog"){ el.setAttribute("role","dialog"); el.setAttribute("aria-modal","true"); }
+    new MutationObserver(function(){
+      if(el.classList.contains("oculto")) modalCerrar(id,el); else modalAbrir(id,el);
+    }).observe(el,{attributes:true,attributeFilter:["class"]});
+  });
+  document.addEventListener("keydown", function(e){
+    if(e.key!=="Escape" && e.key!=="Esc") return;
+    for(var i=MODALES.length-1;i>=0;i--){
+      var el=$(MODALES[i]);
+      if(el && !el.classList.contains("oculto")){
+        var b=botonCerrarModal(el);
+        if(b){ e.preventDefault(); b.click(); }
+        return;
+      }
+    }
+  });
+}
 function toast(msg, ms){
   var t=$("toast"); if(!t) return;
   t.textContent=msg; t.classList.remove("oculto");
@@ -46,18 +110,27 @@ window.addEventListener("hashchange", ruta);
    VOZ (TTS) — accesibilidad estrella
    ============================================================ */
 var soportaVoz = ("speechSynthesis" in window);
-function hablar(texto){
-  if(!soportaVoz){ toast("Tu celular no soporta la lectura por voz"); return; }
+function hablar(texto,alTerminar){
+  if(!soportaVoz){ toast("Tu celular no soporta la lectura por voz"); return false; }
   try{
     window.speechSynthesis.cancel();
+    document.querySelectorAll(".btn-voz.detener").forEach(resetBtnVoz);
     var u=new SpeechSynthesisUtterance(texto);
     u.lang="es-ES"; u.rate=0.95;
+    if(alTerminar){ u.onend=alTerminar; u.onerror=alTerminar; }
     window.speechSynthesis.speak(u);
-    toast("🔊 Leyendo…");
-  }catch(e){ toast("No pude iniciar la voz"); }
+    toast("🔊 Leyendo… tócalo otra vez para parar");
+    return true;
+  }catch(e){ toast("No pude iniciar la voz"); diag("voz: "+((e&&e.name)||e)); return false; }
 }
 function detenerVoz(){
   if(soportaVoz){ try{ window.speechSynthesis.cancel(); }catch(e){} }
+}
+// El botón de voz alterna: 🔊 Escuchar ⇄ ⏹ Detener (la regla .btn-voz.detener existía sin dueño)
+function resetBtnVoz(b){ b.classList.remove("detener"); b.textContent="🔊 Escuchar"; }
+function alternarVoz(b,texto){
+  if(b.classList.contains("detener")){ detenerVoz(); resetBtnVoz(b); return; }
+  if(hablar(texto,function(){ resetBtnVoz(b); })){ b.classList.add("detener"); b.textContent="⏹ Detener"; }
 }
 function textoDePagina(page){
   var el=$("page-"+page);
@@ -139,7 +212,23 @@ function enviarEstado(tipo){
    MI UBICACIÓN (GPS sin internet)
    El GPS solo recibe señal: funciona sin datos ni WiFi.
    ============================================================ */
+/* Forma canónica única: null o { lat, lng, acc, ts }.
+   S1: antes un camino guardaba string ("lat,lng") y otro objeto, y el aviso
+   de emergencia salía con "undefined,undefined" o "[object Object]".
+   setUbicacion() es el ÚNICO escritor; ubicTexto()/ubicEnlace() los únicos lectores. */
 var ubicacionActual=null;
+function setUbicacion(lat,lng,acc){
+  var la=String(lat==null?"":lat).trim(), lo=String(lng==null?"":lng).trim();
+  if(!la||!lo||la==="undefined"||lo==="undefined"){ ubicacionActual=null; return null; }
+  ubicacionActual={ lat:la, lng:lo, acc:(acc==null?null:Math.round(acc)), ts:Date.now() };
+  return ubicacionActual;
+}
+function ubicTexto(){
+  var u=ubicacionActual; if(!u) return "";
+  if(typeof u==="string") return u;
+  return (u.lat&&u.lng)? u.lat+","+u.lng : "";
+}
+function ubicEnlace(){ var t=ubicTexto(); return t? "https://maps.google.com/?q="+t : ""; }
 function verUbicacion(){
   var coords=$("ubicCoords"), prec=$("ubicPrecision"), mini=$("pUbicMini");
   if(!navigator.geolocation){
@@ -152,7 +241,7 @@ function verUbicacion(){
   navigator.geolocation.getCurrentPosition(
     function(pos){
       var la=pos.coords.latitude.toFixed(5), lo=pos.coords.longitude.toFixed(5);
-      ubicacionActual=la+","+lo;
+      setUbicacion(la, lo, pos.coords.accuracy);
       coords.textContent=la+"  ,  "+lo;
       coords.classList.remove("oculto");
       prec.textContent=DATOS.miUbicacion.precision+Math.round(pos.coords.accuracy)+" metros";
@@ -172,8 +261,9 @@ function verUbicacion(){
   );
 }
 function copiarUbicacion(){
-  if(!ubicacionActual){ toast("Primero toca 'Ver mi ubicación'"); return; }
-  var texto="Mi ubicación: https://maps.google.com/?q="+ubicacionActual;
+  var enlace=ubicEnlace();
+  if(!enlace){ toast("Primero toca 'Ver mi ubicación'"); return; }
+  var texto="Mi ubicación: "+enlace;
   if(navigator.clipboard && navigator.clipboard.writeText){
     navigator.clipboard.writeText(texto).then(
       function(){ toast(DATOS.miUbicacion.copiado); },
@@ -194,7 +284,7 @@ function copiarFallback(texto){
    FICHA MÉDICA DE EMERGENCIA (ICE) — privada, solo en el teléfono
    ============================================================ */
 var FICHA={ nombre:"", sangre:"", alergias:"", medicamentos:"", contactoNombre:"", contactoNum:"" };
-function guardarFichaLS(){ try{ localStorage.setItem("sosficha", JSON.stringify(FICHA)); }catch(e){} }
+function guardarFichaLS(){ guardarLS("sosficha", FICHA, "ficha médica"); }
 function cargarFicha(){
   try{ var g=localStorage.getItem("sosficha"); if(g){ var o=JSON.parse(g); if(o) FICHA=o; } }catch(e){}
   // rellena el formulario y el selector de sangre
@@ -249,7 +339,7 @@ function cerrarFichaGrande(){ var o=$("overlayFicha"); if(o) o.classList.add("oc
    Máximo 5. El botón de emergencia les prepara el aviso.
    ============================================================ */
 var CONTACTOS=[]; // [{nombre, tel}]
-function guardarContactosLS(){ try{ localStorage.setItem("soscontactos", JSON.stringify(CONTACTOS)); }catch(e){} }
+function guardarContactosLS(){ guardarLS("soscontactos", CONTACTOS, "contactos"); }
 function cargarContactos(){
   try{
     var g=localStorage.getItem("soscontactos");
@@ -339,9 +429,10 @@ function elegirContactoEmergencia(i){
   cerrarChooserContacto();
   // armar el mensaje de emergencia con la ubicación (si ya llegó)
   var msg=DATOS.compartir.necesitoAyuda;
-  if(ubicacionActual){
-    msg+=DATOS.compartir.ubicacion+ubicacionActual.lat+","+ubicacionActual.lng+" ";
-    msg+="https://maps.google.com/?q="+ubicacionActual.lat+","+ubicacionActual.lng+" ";
+  var ub=ubicTexto();
+  if(ub){
+    msg+=DATOS.compartir.ubicacion+ub+" ";
+    msg+="https://maps.google.com/?q="+ub+" ";
   }
   msg+=resumenMedico();
   msg+="— Enviado desde SOS Colombia";
@@ -421,7 +512,10 @@ function svSirena(){
     }catch(e){}
   }
   // flash visual sincronizado: la alarma también SE VE (respaldo si el audio sigue muteado)
-  var caja=document.getElementById("sosVivoCaja");
+  /* S3: apuntaba a #sosVivoCaja, un id que no existe en el DOM, así que el
+     destello nunca disparaba y el CSS .sv-flash estaba muerto. El panel real
+     del SOS activo es #svPanel. */
+  var caja=document.getElementById("svPanel");
   if(caja){
     caja.classList.add("sv-flash");
     setTimeout(function(){ caja.classList.remove("sv-flash"); }, 450);
@@ -495,7 +589,7 @@ function activarSosVivo(){
       },
       function(err){
         if(err && err.code===1){ // PERMISSION_DENIED: bloqueada
-          $("svUbicacion").innerHTML=DATOS.sosVivo.gpsBloqueada;
+          $("svUbicacion").innerHTML=DATOS.sosVivo.activo.gpsBloqueada;
         } else {
           $("svUbicacion").textContent=DATOS.sosVivo.activo.sinGPS;
         }
@@ -716,7 +810,7 @@ function triajeIrAGuia(){
    CHECKLIST DE PREPARACIÓN DEL HOGAR (persistente)
    ============================================================ */
 var CHECK={};
-function guardarCheckLS(){ try{ localStorage.setItem("soscheck", JSON.stringify(CHECK)); }catch(e){} }
+function guardarCheckLS(){ guardarLS("soscheck", CHECK, "kit de prep"); }
 function cargarCheck(){
   try{
     var g=localStorage.getItem("soscheck");
@@ -748,7 +842,7 @@ function renderChecklist(){
    PLAN FAMILIAR DE EMERGENCIA (persistente)
    ============================================================ */
 var PLAN={ punto:"", tel1:"", tel2:"" };
-function guardarPlanLS(){ try{ localStorage.setItem("sosplan", JSON.stringify(PLAN)); }catch(e){} }
+function guardarPlanLS(){ guardarLS("sosplan", PLAN, "plan familiar"); }
 function cargarPlan(){
   try{
     var g=localStorage.getItem("sosplan");
@@ -773,6 +867,15 @@ function guardarPlan(){
   guardarPlanLS();
   $("planConsejo").textContent=DATOS.planFamiliar.verderia;
   toast(DATOS.planFamiliar.guardado, 2500);
+}
+/* El plan se guarda SOLO al escribir, sin esperar al botón: en una emergencia
+   se rellena rápido y la app se cierra (o se queda sin batería) sin avisar. */
+var planTimer=null;
+function guardarPlanSolo(){
+  PLAN.punto=$("planPunto").value.trim();
+  PLAN.tel1=$("planTel1").value.trim();
+  PLAN.tel2=$("planTel2").value.trim();
+  guardarPlanLS();
 }
 
 /* ============================================================
@@ -828,6 +931,10 @@ function pasoLuz(i){
   luzTimer=setTimeout(function(){ pasoLuz(i+1); }, Math.abs(d));
 }
 function iniciarLuz(){
+  /* S5: idempotente. Tres disparadores distintos llaman aquí (botón del panel,
+     botón de arriba y el asistente); sin esto se arrancaban cadenas paralelas
+     y solo el último luzTimer se podía cancelar. */
+  if(luzTimer){ clearTimeout(luzTimer); luzTimer=null; }
   luzActiva=true;
   var ov=$("overlayLuz");
   ov.classList.remove("oculto");
@@ -858,8 +965,26 @@ function compartirApp(){
 /* ============================================================
    ACCESIBILIDAD (letra, contraste, modo claro) — persistido
    ============================================================ */
-var AJUSTES={ fs:17, contraste:false, claro:false, esperanza:false };
-function guardarAjustes(){ try{ localStorage.setItem("sosajustes", JSON.stringify(AJUSTES)); }catch(e){} }
+/* claro: null = seguir al sistema (por defecto), true/false = elección explícita del usuario */
+var AJUSTES={ fs:17, contraste:false, claro:null, esperanza:false };
+var MQ_CLARO = window.matchMedia ? window.matchMedia("(prefers-color-scheme: light)") : null;
+function claroActivo(){ return AJUSTES.claro===null ? !!(MQ_CLARO && MQ_CLARO.matches) : !!AJUSTES.claro; }
+function nombreModoClaro(){
+  // describe siempre el ESTADO actual, no la acción (antes mezclaba los dos)
+  if(AJUSTES.claro===null) return "Automático (" + (claroActivo()?"claro":"oscuro") + ")";
+  return AJUSTES.claro ? "Claro (fijo)" : "Oscuro (fijo)";
+}
+function cicloModoClaro(){
+  // automático → claro fijo → oscuro fijo → automático (antes el "claro fijo" era inalcanzable)
+  AJUSTES.claro = AJUSTES.claro===null ? true : (AJUSTES.claro===true ? false : null);
+  aplicarAjustes(); guardarAjustes();
+}
+if(MQ_CLARO){
+  var alCambio=function(){ if(AJUSTES.claro===null) aplicarAjustes(); };
+  if(MQ_CLARO.addEventListener) MQ_CLARO.addEventListener("change", alCambio);
+  else if(MQ_CLARO.addListener) MQ_CLARO.addListener(alCambio);
+}
+function guardarAjustes(){ guardarLS("sosajustes", AJUSTES, "ajustes"); }
 function cargarAjustes(){
   try{
     var g=localStorage.getItem("sosajustes");
@@ -886,9 +1011,9 @@ function cargarAjustes(){
 function aplicarAjustes(){
   document.documentElement.style.setProperty("--fs", AJUSTES.fs+"px");
   document.body.classList.toggle("contraste", AJUSTES.contraste);
-  document.body.classList.toggle("claro", AJUSTES.claro);
+  document.body.classList.toggle("claro", claroActivo());
   var bc=$("btnContraste"); if(bc) bc.textContent=AJUSTES.contraste?"Desactivar":"Activar";
-  var bo=$("btnClaro"); if(bo) bo.textContent=AJUSTES.claro?"Desactivar":"Activar";
+  var bo=$("btnClaro"); if(bo) bo.textContent=nombreModoClaro();
   var be=$("btnEsperanza"); if(be) be.textContent=AJUSTES.esperanza?"Desactivar":"Activar";
   var fr=$("fraseEsperanza");
   if(fr){
@@ -898,6 +1023,61 @@ function aplicarAjustes(){
       fr.hidden=false;
     } else { fr.hidden=true; }
   }
+}
+
+/* ============================================================
+   RESPALDO — exportar / importar ficha y contactos
+   Sin servidor ni cuenta. Solo se restauran campos concretos con
+   tipo y longitud validadas: un archivo ajeno no puede meter HTML
+   en la app. El checklist y el plan familiar no se exportan a
+   propósito (se rehacen en un minuto y así el respaldo no puede
+   sobrescribirlos por error).
+   ============================================================ */
+function limitar(v,n){ return typeof v==="string" ? v.slice(0,n) : ""; }
+function armarRespaldo(){
+  return { app:"SOS Colombia", tipo:"respaldo", version:(DATOS.app&&DATOS.app.version)||"",
+           fecha:new Date().toISOString(), ficha:JSON.parse(JSON.stringify(FICHA)),
+           contactos:JSON.parse(JSON.stringify(CONTACTOS)) };
+}
+function exportarRespaldo(){
+  try{
+    var url=URL.createObjectURL(new Blob([JSON.stringify(armarRespaldo(),null,2)],{type:"application/json"}));
+    var a=document.createElement("a");
+    a.href=url; a.download="sos-colombia-"+new Date().toISOString().slice(0,10)+".json";
+    document.body.appendChild(a); a.click();
+    setTimeout(function(){ URL.revokeObjectURL(url); if(a.remove) a.remove(); },800);
+    toast("⬇️ Respaldo descargado ("+(CONTACTOS.length+1)+" datos)");
+    var est=$("estadoRespaldo"); if(est) est.textContent="Respaldo generado el "+new Date().toLocaleDateString("es-CO");
+  }catch(e){ diag("export falló: "+((e&&e.name)||e)); toast("No se pudo exportar en este navegador"); }
+}
+function importarRespaldo(archivo){
+  var f=new FileReader();
+  f.onload=function(){
+    var obj=null;
+    try{ obj=JSON.parse(f.result); }catch(e){ toast("El archivo no se pudo leer"); return; }
+    if(!obj || obj.app!=="SOS Colombia"){ toast("Ese archivo no es un respaldo de SOS Colombia"); return; }
+    if(!window.confirm("Restaurar reemplaza la ficha y los contactos de este teléfono por los del respaldo. ¿Continuar?")) return;
+    var n=0;
+    if(obj.ficha && typeof obj.ficha==="object"){
+      FICHA.nombre=limitar(obj.ficha.nombre,60); FICHA.sangre=limitar(obj.ficha.sangre,6);
+      FICHA.alergias=limitar(obj.ficha.alergias,140); FICHA.medicamentos=limitar(obj.ficha.medicamentos,140);
+      FICHA.contactoNombre=limitar(obj.ficha.contactoNombre,60);
+      FICHA.contactoNum=limitar(String(obj.ficha.contactoNum||""),24);
+      if(guardarLS("sosficha",FICHA,"ficha")) n++;
+    }
+    if(Array.isArray(obj.contactos)){
+      CONTACTOS=obj.contactos.slice(0,5).map(function(c){
+        c=c||{}; return { nombre:limitar(c.nombre,60), tel:limitar(String(c.tel||""),24) };
+      }).filter(function(c){ return c.nombre || c.tel; });
+      if(guardarLS("soscontactos",CONTACTOS,"contactos")) n++;
+    }
+    cargarFicha(); cargarContactos(); renderTodo();
+    var est=$("estadoRespaldo");
+    if(est) est.textContent="Restaurado "+new Date().toLocaleDateString("es-CO")+" · "+CONTACTOS.length+" contactos";
+    toast(n?("✅ Respaldo restaurado ("+n+" bloques)"):"El respaldo venía vacío");
+  };
+  f.onerror=function(){ diag("lectura del archivo falló"); toast("No se pudo leer el archivo"); };
+  f.readAsText(archivo);
 }
 function cambiarLetra(delta){
   AJUSTES.fs=Math.min(24, Math.max(14, AJUSTES.fs+delta));
@@ -1125,10 +1305,12 @@ function eventos(){
   $("cerrarFicha").addEventListener("click", cerrarFichaGrande);
   $("overlayFicha").addEventListener("click", function(e){ if(e.target===this) cerrarFichaGrande(); });
 
-  // voz global (lee la página actual)
+  // voz global (lee la página actual; volver a tocarla la detiene)
   $("btnVozGlobal").addEventListener("click", function(){
+    var b=this, devolver=function(){ b.textContent="🔊"; b.setAttribute("aria-label","Leer en voz alta"); };
+    if(soportaVoz && window.speechSynthesis.speaking){ detenerVoz(); devolver(); toast("Lectura detenida"); return; }
     var page=(location.hash||"#/inicio").replace("#/","");
-    hablar(textoDePagina(page));
+    if(hablar(textoDePagina(page), devolver)){ b.textContent="⏹"; b.setAttribute("aria-label","Detener la lectura"); }
   });
 
   // herramientas
@@ -1147,7 +1329,13 @@ function eventos(){
   $("btnLetraNormal").addEventListener("click", function(){ AJUSTES.fs=17; aplicarAjustes(); guardarAjustes(); toast("Letra normal"); });
   $("btnLetraMas").addEventListener("click", function(){ cambiarLetra(+1); });
   $("btnContraste").addEventListener("click", function(){ AJUSTES.contraste=!AJUSTES.contraste; aplicarAjustes(); guardarAjustes(); });
-  $("btnClaro").addEventListener("click", function(){ AJUSTES.claro=!AJUSTES.claro; aplicarAjustes(); guardarAjustes(); });
+  $("btnClaro").addEventListener("click", cicloModoClaro);
+  var be1=$("btnExportarDatos"); if(be1) be1.addEventListener("click", exportarRespaldo);
+  var bi1=$("btnImportarDatos"), ai1=$("archivoImportar");
+  if(bi1 && ai1){
+    bi1.addEventListener("click", function(){ ai1.click(); });
+    ai1.addEventListener("change", function(){ if(this.files && this.files[0]) importarRespaldo(this.files[0]); this.value=""; });
+  }
   $("btnEsperanza").addEventListener("click", function(){ AJUSTES.esperanza=!AJUSTES.esperanza; aplicarAjustes(); guardarAjustes(); });
 
   // instalación
@@ -1162,6 +1350,10 @@ function eventos(){
 
   // plan familiar
   $("btnGuardarPlan").addEventListener("click", guardarPlan);
+  ["planPunto", "planTel1", "planTel2"].forEach(function(id){
+    var el=$(id); if(!el) return;
+    el.addEventListener("input", function(){ clearTimeout(planTimer); planTimer=setTimeout(guardarPlanSolo, 400); });
+  });
 
   // acordeones + mini-tabs + voz por sección (delegación en contenido)
   $("contenido").addEventListener("click", function(e){
@@ -1194,13 +1386,15 @@ function eventos(){
     var bv=e.target.closest(".btn-voz");
     if(bv){
       var tipo=bv.getAttribute("data-voz"), idx=+bv.getAttribute("data-idx");
+      var txt="";
       if(tipo==="desastre"){
         var d=DATOS.desastres[idx];
-        hablar(d.nombre+". Antes: "+d.antes.join(". ")+". Durante: "+d.durante.join(". ")+". Después: "+d.despues.join(". "));
+        txt=d.nombre+". Antes: "+d.antes.join(". ")+". Durante: "+d.durante.join(". ")+". Después: "+d.despues.join(". ");
       } else if(tipo==="auxilio"){
         var a=DATOS.auxilios[idx];
-        hablar(a.nombre+". "+a.pasos.join(". "));
+        txt=a.nombre+". "+a.pasos.join(". ");
       }
+      if(txt) alternarVoz(bv, txt);
       return;
     }
     // mini-tabs antes/durante/después
@@ -1270,6 +1464,10 @@ function registrarSW(){
 }
 
 function init(){
+  /* S6: un error que rompa el arranque de una app de emergencia no puede
+     quedarse mudo. Se anota y se avisa; la app sigue usable con lo que cargue. */
+  window.addEventListener("error", function(e){ diag("error: "+(e.message||"desconocido")); });
+  window.addEventListener("unhandledrejection", function(e){ diag("rechazo: "+((e.reason&&e.reason.message)||e.reason)); });
   cargarAjustes();
   cargarFicha();
   cargarContactos();
@@ -1277,6 +1475,7 @@ function init(){
   cargarPlan();
   renderTodo();
   eventos();
+  vigilarModales();
   registrarSW();
   ruta();
   if(!soportaVoz){
@@ -1288,7 +1487,7 @@ function init(){
   if(navigator.geolocation){
     navigator.geolocation.getCurrentPosition(
       function(pos){
-        ubicacionActual={ lat:pos.coords.latitude.toFixed(5), lng:pos.coords.longitude.toFixed(5) };
+        setUbicacion(pos.coords.latitude.toFixed(5), pos.coords.longitude.toFixed(5), pos.coords.accuracy);
       },
       function(){ /* permiso negado u error: silencio; se pedirá al usar */ },
       { timeout:10000, maximumAge:300000 }
