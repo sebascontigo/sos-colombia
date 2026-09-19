@@ -21,17 +21,71 @@
 
 <a class="saltar" href="#contenido">Saltar al contenido</a>
 
+<!-- ============================================================
+     Sistema de iconos: 24×24, trazo 1.7, redondeado, currentColor.
+     Un solo sprite definitions y <use> en toda la app: sin librerías,
+     sin CDN, sin peticiones. Los emojis del contenido (tipos de
+     desastre, checklist) se quedan: ahí son ayuda de lectura, no
+     iconos de interfaz.
+     ============================================================ -->
+<svg class="sprite" aria-hidden="true" focusable="false"><defs>
+<symbol id="i-inicio" viewBox="0 0 24 24"><path d="M3.6 10.4 12 3.8l8.4 6.6V19a1.4 1.4 0 0 1-1.4 1.4h-3.6v-5.6H9.6v5.6H5a1.4 1.4 0 0 1-1.4-1.4z"/></symbol>
+<symbol id="i-sirena" viewBox="0 0 24 24"><path d="M6.4 15.6v-3.2a5.6 5.6 0 0 1 11.2 0v3.2"/><path d="M4.4 15.6h15.2v2.8H4.4z"/><path d="M12 3.6v1.6M4.8 6.4l1.2 1.1M19.2 6.4l-1.2 1.1"/></symbol>
+<symbol id="i-cruz" viewBox="0 0 24 24"><path d="M12 3.6 19 6v6.2c0 4-2.9 6.4-7 7.8-4.1-1.4-7-3.8-7-7.8V6z"/><path d="M12 8.8v6.4M8.8 12h6.4"/></symbol>
+<symbol id="i-gente" viewBox="0 0 24 24"><circle cx="9" cy="8.2" r="3.1"/><path d="M3.6 19.4c.5-3.1 2.7-4.9 5.4-4.9s4.9 1.8 5.4 4.9"/><path d="M16.2 6.2a3 3 0 0 1 .3 5.9M17.6 14.9c2 .5 3.3 2.2 3.7 4.5"/></symbol>
+<symbol id="i-ajustes" viewBox="0 0 24 24"><path d="M4 7.6h9M17.6 7.6H20M4 16.4h4.4M13 16.4h7"/><circle cx="15" cy="7.6" r="2.4"/><circle cx="10.6" cy="16.4" r="2.4"/></symbol>
+<symbol id="i-voz" viewBox="0 0 24 24"><path d="M11.4 5.4 6.6 9.2H4v5.6h2.6l4.8 3.8z"/><path d="M15.2 9a4.4 4.4 0 0 1 0 6M17.9 6.4a8 8 0 0 1 0 11.2"/></symbol>
+<symbol id="i-detener" viewBox="0 0 24 24"><rect x="6.2" y="6.2" width="11.6" height="11.6" rx="2.2"/></symbol>
+<symbol id="i-luz" viewBox="0 0 24 24"><path d="M9.2 17.4h5.6M9.8 20.2h4.4"/><path d="M12 3.6a5.8 5.8 0 0 1 3.4 10.5v1.5H8.6v-1.5A5.8 5.8 0 0 1 12 3.6z"/></symbol>
+<symbol id="i-silbato" viewBox="0 0 24 24"><path d="M13.6 6.4h5.2a1.6 1.6 0 0 1 1.6 1.6v3.6a5.6 5.6 0 0 1-11.2 0V9.4"/><circle cx="8.4" cy="13.6" r="3.4"/><path d="M8.4 10.2V6.4a2.4 2.4 0 0 1 2.4-2.4"/></symbol>
+<symbol id="i-telefono" viewBox="0 0 24 24"><path d="M6.2 3.8h3l1.6 4-2 1.4a11 11 0 0 0 5.4 5.4l1.4-2 4 1.6v3a1.8 1.8 0 0 1-2 1.8C10.4 19.4 4.6 13.6 4.4 5.8a1.8 1.8 0 0 1 1.8-2z"/></symbol>
+<symbol id="i-chip" viewBox="0 0 24 24"><path d="M4.4 11.4a7.6 7.6 0 0 1 15.2 0v3.2a2 2 0 0 1-2 2h-2.2"/><path d="M4.4 11.4v4.2a2 2 0 0 0 2 2h1.4v-6.2H4.4zM17.4 11.4v6.2h1.4"/><rect x="7.4" y="13.4" width="3.2" height="4.2" rx="1"/></symbol>
+<symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 3.8a5.8 5.8 0 0 1 5.8 5.8c0 4.2-5.8 10.6-5.8 10.6S6.2 13.8 6.2 9.6A5.8 5.8 0 0 1 12 3.8z"/><circle cx="12" cy="9.6" r="2.2"/></symbol>
+<symbol id="i-ficha" viewBox="0 0 24 24"><rect x="3.6" y="5.4" width="16.8" height="13.2" rx="2.4"/><path d="M3.6 9.6h16.8M6.8 13.4h3.4M6.8 15.8h5.6"/><path d="M16.6 12.2v5M14.2 14.6h4.8"/></symbol>
+<symbol id="i-contactos" viewBox="0 0 24 24"><circle cx="12" cy="8.2" r="3.4"/><path d="M5.4 19.6c.7-3.4 3.3-5.4 6.6-5.4s5.9 2 6.6 5.4"/></symbol>
+<symbol id="i-tabla" viewBox="0 0 24 24"><rect x="4.6" y="3.8" width="14.8" height="16.4" rx="2.2"/><path d="M9 3.8v2.4h6V3.8M8.6 11h6.8M8.6 14.4h4.6"/></symbol>
+<symbol id="i-casa" viewBox="0 0 24 24"><path d="M3.8 10.6 12 4l8.2 6.6"/><path d="M5.8 12.2v7.4h12.4v-7.4"/><path d="M9.8 19.6v-4.4h4.4v4.4"/></symbol>
+<symbol id="i-cinturon" viewBox="0 0 24 24"><path d="M4.6 8.4h14.8v7.2H4.6z"/><path d="M9.6 8.4v7.2M14.4 8.4v7.2M4.6 12h5M14.4 12h5"/></symbol>
+<symbol id="i-mapa" viewBox="0 0 24 24"><path d="M3.6 6.6 9 4.4l6 2.2 5.4-2.2v12.8L15 19.4l-6-2.2-5.4 2.2z"/><path d="M9 4.4v12.8M15 6.6v12.8"/></symbol>
+<symbol id="i-botiquin" viewBox="0 0 24 24"><rect x="3.6" y="7.4" width="16.8" height="12.2" rx="2.4"/><path d="M8.6 7.4V5.8a1.6 1.6 0 0 1 1.6-1.6h3.6a1.6 1.6 0 0 1 1.6 1.6v1.6"/><path d="M12 11v5M9.6 13.4h4.8"/></symbol>
+<symbol id="i-agua" viewBox="0 0 24 24"><path d="M12 3.8s5.6 6 5.6 9.6a5.6 5.6 0 0 1-11.2 0C6.4 9.8 12 3.8 12 3.8z"/><path d="M9.4 14.2a2.8 2.8 0 0 0 2.6 2.6"/></symbol>
+<symbol id="i-corazon" viewBox="0 0 24 24"><path d="M12 19.6C7.2 16.6 4 13.8 4 10.4A3.8 3.8 0 0 1 12 8a3.8 3.8 0 0 1 8 2.4c0 3.4-3.2 6.2-8 9.2z"/></symbol>
+<symbol id="i-escudo" viewBox="0 0 24 24"><path d="M12 3.6 19 6v6.2c0 4-2.9 6.4-7 7.8-4.1-1.4-7-3.8-7-7.8V6z"/><path d="M9 12.2l2.2 2.2 4-4.4"/></symbol>
+<symbol id="i-antena" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.2"/><path d="M8.2 8.2a5.4 5.4 0 0 0 0 7.6M15.8 15.8a5.4 5.4 0 0 0 0-7.6M5.6 5.6a9 9 0 0 0 0 12.8M18.4 18.4a9 9 0 0 0 0-12.8"/></symbol>
+<symbol id="i-herramientas" viewBox="0 0 24 24"><path d="M14.6 6.4a3.8 3.8 0 0 1 5 5l-8.4 8.4-3.6.2-.2-3.6z"/><path d="M5.4 5.4l3 3M4 20l3.6-3.6"/></symbol>
+<symbol id="i-descarga" viewBox="0 0 24 24"><path d="M12 4v10M8 10.4l4 4 4-4"/><path d="M4.6 17.4v1.4a1.6 1.6 0 0 0 1.6 1.6h11.6a1.6 1.6 0 0 0 1.6-1.6v-1.4"/></symbol>
+<symbol id="i-subida" viewBox="0 0 24 24"><path d="M12 19.4V8M8 12l4-4 4 4"/><path d="M4.6 6.6V5.2a1.6 1.6 0 0 1 1.6-1.6h11.6a1.6 1.6 0 0 1 1.6 1.6v1.4"/></symbol>
+<symbol id="i-mas" viewBox="0 0 24 24"><path d="M12 5.4v13.2M5.4 12h13.2"/></symbol>
+<symbol id="i-ojo" viewBox="0 0 24 24"><path d="M2.8 12S6.4 5.8 12 5.8 21.2 12 21.2 12 17.6 18.2 12 18.2 2.8 12 2.8 12z"/><circle cx="12" cy="12" r="2.8"/></symbol>
+<symbol id="i-guardar" viewBox="0 0 24 24"><path d="M5.4 4.6h10.2L19.4 8.4v11H5.4z"/><path d="M8.6 4.6v5h6.2v-5M8.6 19.4v-5.2h6.8v5.2"/></symbol>
+<symbol id="i-basura" viewBox="0 0 24 24"><path d="M4.8 7.4h14.4M9.6 7.4V5.2h4.8v2.2M6.6 7.4l.9 12.2h9l.9-12.2"/><path d="M10.4 11v5.4M13.6 11v5.4"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24"><path d="M6.4 6.4l11.2 11.2M17.6 6.4 6.4 17.6"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.8 9.6 17.4 19 6.8"/></symbol>
+<symbol id="i-whatsapp" viewBox="0 0 24 24"><path d="M4.2 19.8l1.2-4.2A7.8 7.8 0 1 1 8.8 19z"/><path d="M9.2 9.4c.4 2.6 2.8 5 5.4 5.4l1-1.6-1.8-.8-.8.8a6 6 0 0 1-2.2-2.2l.8-.8-.8-1.8z"/></symbol>
+<symbol id="i-sobre" viewBox="0 0 24 24"><rect x="3.4" y="5.8" width="17.2" height="12.4" rx="2.2"/><path d="M3.8 7.4 12 13l8.2-5.6"/></symbol>
+<symbol id="i-pajaro" viewBox="0 0 24 24"><path d="M4 14.6c3.4.4 6-1 7.6-3.4C13.6 8.2 15.6 6 19.4 5c-.4 3.8-2.2 6.4-4.6 8-2.4 1.6-5.2 2.2-8.6 2z"/><path d="M12.6 13.2c.6 2.4 2 4.2 4.4 5.2"/></symbol>
+<symbol id="i-instalar" viewBox="0 0 24 24"><rect x="7.4" y="3.4" width="9.2" height="17.2" rx="2.2"/><path d="M10.6 6.6h2.8M12 10.4v5M9.8 13.2l2.2 2.2 2.2-2.2"/></symbol>
+<symbol id="i-fuego" viewBox="0 0 24 24"><path d="M12 3.6c3.4 3 5.4 5.6 5.4 8.4a5.4 5.4 0 0 1-10.8 0c0-1.2.4-2.3 1.2-3.4.4 1.2 1.2 1.9 2.1 2.1-.5-2.4.3-4.7 2.1-7.1z"/></symbol>
+<symbol id="i-coche" viewBox="0 0 24 24"><path d="M4.2 14.6 5.8 9a2.2 2.2 0 0 1 2.1-1.6h6.2A2.2 2.2 0 0 1 16.2 9l1.6 5.6"/><path d="M3.6 14.6h16.8v3.2H3.6z"/><circle cx="7.4" cy="17.8" r="1.4"/><circle cx="16.6" cy="17.8" r="1.4"/></symbol>
+<symbol id="i-alerta" viewBox="0 0 24 24"><path d="M12 4.4 21 19.6H3z"/><path d="M12 10v4.2M12 16.8v.1"/></symbol>
+<symbol id="i-candado" viewBox="0 0 24 24"><rect x="5.4" y="10.4" width="13.2" height="9.4" rx="2.2"/><path d="M8.4 10.4V7.8a3.6 3.6 0 0 1 7.2 0v2.6M12 14v2.4"/></symbol>
+<symbol id="i-reloj" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.4"/><path d="M12 7.2V12l3.4 2.2"/></symbol>
+<symbol id="i-brujula" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.4"/><path d="M14.8 9.2 13.4 13.4 9.2 14.8l1.4-4.2z"/></symbol>
+<symbol id="i-radio" viewBox="0 0 24 24"><rect x="3.4" y="9.4" width="17.2" height="10.4" rx="2"/><path d="M7.4 9.4 16.6 4.6M7.6 13.4h5M7.6 16.4h3"/><circle cx="16.4" cy="14.8" r="1.8"/></symbol>
+</defs></svg>
+
+
 <!-- ============ HEADER ============ -->
 <header id="topbar">
   <div class="topbar-inner">
-    <span class="logo">🆘</span>
+    <span class="logo" aria-hidden="true">SOS</span>
     <div class="topbar-text">
       <h1>SOS Colombia</h1>
       <small id="estadoRed">Guía de emergencia</small>
     </div>
-    <button id="btnSilbatoTop" class="icon-btn oro" aria-label="Silbato de emergencia" title="Silbato SOS">📣</button>
-    <button id="btnLuzTop" class="icon-btn oro" aria-label="Luz SOS" title="Luz SOS">💡</button>
-    <button id="btnVozGlobal" class="icon-btn" aria-label="Leer en voz alta" title="Leer en voz alta">🔊</button>
+    <button id="btnSilbatoTop" class="icon-btn oro" aria-label="Silbato de emergencia" title="Silbato SOS"><svg class="ic" aria-hidden="true"><use href="#i-silbato"></use></svg></button>
+    <button id="btnLuzTop" class="icon-btn oro" aria-label="Luz SOS" title="Luz SOS"><svg class="ic" aria-hidden="true"><use href="#i-luz"></use></svg></button>
+    <button id="btnVozGlobal" class="icon-btn" aria-label="Leer en voz alta" title="Leer en voz alta"><svg class="ic" aria-hidden="true"><use href="#i-voz"></use></svg></button>
   </div>
 </header>
 
@@ -50,14 +104,14 @@
 
       <div class="p-bloque">
         <div class="fila-botones">
-          <button id="btnEstoyBien" class="accion verde">✅ Estoy bien</button>
-          <button id="btnNecesitoAyuda" class="accion rojo">🆘 Necesito ayuda</button>
+          <button id="btnEstoyBien" class="accion verde"><svg class="ic" aria-hidden="true"><use href="#i-check"></use></svg> Estoy bien</button>
+          <button id="btnNecesitoAyuda" class="accion rojo"><svg class="ic" aria-hidden="true"><use href="#i-alerta"></use></svg> Necesito ayuda</button>
         </div>
         <p class="p-nota">WhatsApp o SMS, con tu ubicación.</p>
       </div>
 
       <button id="btnEmergencia" class="p-fila" aria-label="Avisar a mis contactos con mi ubicación">
-        <span class="p-ico rojo">🆘</span>
+        <span class="p-ico rojo"><svg class="ic" aria-hidden="true"><use href="#i-contactos"></use></svg></span>
         <span class="p-txt"><strong>Avisar a mis contactos</strong><small>elige a quién, con tu ubicación</small></span>
         <span class="p-flecha">›</span>
       </button>
@@ -66,31 +120,31 @@
         <p class="p-sub">SOS en vivo — si no puedes escribir</p>
         <p class="calma" id="calmaSos" hidden></p>
         <div class="sv-chips" id="svChips"></div>
-        <button id="btnSosVivo" class="sosvivo-activar">🔴 ACTIVAR SOS EN VIVO</button>
+        <button id="btnSosVivo" class="sosvivo-activar"><svg class="ic" aria-hidden="true"><use href="#i-sirena"></use></svg> ACTIVAR SOS EN VIVO</button>
         <div id="svPanel" class="oculto">
           <div class="sv-estado"><span class="sv-punto"></span><strong>SOS ACTIVO</strong><span id="svTipo"></span></div>
-          <p class="sv-ubic" id="svUbicacion">📡 Buscando GPS…</p>
-          <p class="sv-sirena" id="svAvisoSirena">🔊 Alarma sonando. Toca DETENER cuando estés a salvo.</p>
+          <p class="sv-ubic" id="svUbicacion"><svg class="ic" aria-hidden="true"><use href="#i-antena"></use></svg> Buscando GPS…</p>
+          <p class="sv-sirena" id="svAvisoSirena"><svg class="ic" aria-hidden="true"><use href="#i-voz"></use></svg> Alarma sonando. Toca DETENER cuando estés a salvo.</p>
           <div id="svCola"></div>
           <button id="btnDetenerSos" class="sosvivo-detener">⏹ DETENER SOS</button>
         </div>
       </div>
 
       <button id="btnFicha" class="p-fila">
-        <span class="p-ico azul">🏥</span>
+        <span class="p-ico azul"><svg class="ic" aria-hidden="true"><use href="#i-ficha"></use></svg></span>
         <span class="p-txt"><strong>Ficha médica</strong><small>sangre, alergias, contacto — por si no puedes hablar</small></span>
         <span class="p-flecha">›</span>
       </button>
 
       <button id="btnUbicacion" class="p-fila">
-        <span class="p-ico oro">📍</span>
+        <span class="p-ico oro"><svg class="ic" aria-hidden="true"><use href="#i-pin"></use></svg></span>
         <span class="p-txt"><strong>Mi ubicación</strong><small id="pUbicMini">GPS sin internet · copiar coordenadas</small></span>
         <span class="p-flecha">›</span>
       </button>
       <div id="ubicCoords" class="ubic-coords oculto"></div>
       <div id="ubicPrecision" class="ubic-precision"></div>
       <div class="fila-botones oculto" id="pUbicBotones">
-        <button id="btnCopiarUbic" class="accion verde">📋 Copiar coordenadas</button>
+        <button id="btnCopiarUbic" class="accion verde"><svg class="ic" aria-hidden="true"><use href="#i-tabla"></use></svg> Copiar coordenadas</button>
       </div>
 
       <div class="p-bloque">
@@ -99,7 +153,7 @@
       </div>
 
       <button id="btnCompartir" class="p-fila">
-        <span class="p-ico whats">💬</span>
+        <span class="p-ico whats"><svg class="ic" aria-hidden="true"><use href="#i-whatsapp"></use></svg></span>
         <span class="p-txt"><strong>Compartir la guía</strong><small>guárdala y envíala, puede salvar vidas</small></span>
         <span class="p-flecha">›</span>
       </button>
@@ -110,24 +164,24 @@
 
   <!-- ===== EMERGENCIAS ===== -->
   <section id="page-emergencias" class="page">
-    <h2 class="titulo-seccion">📞 Llama ahora (nacionales)</h2>
+    <h2 class="titulo-seccion"><span class="ts-ico"><svg class="ic" aria-hidden="true"><use href="#i-telefono"></use></svg></span>Llama ahora (nacionales)</h2>
     <div id="numerosNacionales"><!-- lo llena app.js --></div>
 
-    <h2 class="titulo-seccion">🏚️ Qué hacer en cada desastre</h2>
+    <h2 class="titulo-seccion"><span class="ts-ico"><svg class="ic" aria-hidden="true"><use href="#i-casa"></use></svg></span>Qué hacer en cada desastre</h2>
     <div id="listaDesastres"><!-- lo llena app.js --></div>
 
-    <h2 class="titulo-seccion">📍 Números por ciudad</h2>
+    <h2 class="titulo-seccion"><span class="ts-ico"><svg class="ic" aria-hidden="true"><use href="#i-pin"></use></svg></span>Números por ciudad</h2>
     <label class="visualmente-oculto" for="buscadorCiudad">Escribe tu ciudad para ver sus números de emergencia</label>
     <input type="search" id="buscadorCiudad" class="buscador" placeholder="Busca tu ciudad…" autocomplete="off" aria-controls="listaCiudades">
     <div id="listaCiudades" aria-live="polite"><!-- lo llena app.js --></div>
 
-    <h2 class="titulo-seccion">🧱 Si estás atrapado</h2>
+    <h2 class="titulo-seccion"><span class="ts-ico"><svg class="ic" aria-hidden="true"><use href="#i-alerta"></use></svg></span>Si estás atrapado</h2>
     <div class="tarjeta" id="atrapado"><!-- lo llena app.js --></div>
   </section>
 
   <!-- ===== PRIMEROS AUXILIOS ===== -->
   <section id="page-auxilios" class="page">
-    <h2 class="titulo-seccion">🩺 Asistente: ¿qué hago ahora?</h2>
+    <h2 class="titulo-seccion"><span class="ts-ico"><svg class="ic" aria-hidden="true"><use href="#i-brujula"></use></svg></span>Asistente: ¿qué hago ahora?</h2>
     <div class="tarjeta triaje-caja" id="triajeCaja">
       <p class="triaje-pregunta" id="triajePregunta"></p>
       <div class="triaje-opciones" id="triajeOpciones"><!-- lo llena app.js --></div>
@@ -136,23 +190,23 @@
         <p id="triajeMensaje"></p>
         <p class="disclaimer" id="triajeDisclaimer"></p>
         <div class="fila-botones">
-          <a id="triajeLlamar" class="accion rojo" href="tel:123">📞 Llamar al 123</a>
-          <button id="triajeGuia" class="accion azul">📖 Ver guía paso a paso</button>
+          <a id="triajeLlamar" class="accion rojo" href="tel:123"><svg class="ic" aria-hidden="true"><use href="#i-telefono"></use></svg> Llamar al 123</a>
+          <button id="triajeGuia" class="accion azul"><svg class="ic" aria-hidden="true"><use href="#i-brujula"></use></svg> Ver guía paso a paso</button>
         </div>
       </div>
       <button id="triajeVolver" class="chooser-cancelar oculto">↩ Volver a empezar</button>
     </div>
     <p class="nota">Responde las preguntas y te lleva directo a la guía correcta. En una emergencia real, llama al <a href="tel:123">123</a> mientras respondes.</p>
 
-    <h2 class="titulo-seccion">⛑️ Primeros auxilios</h2>
-    <p class="nota">Ante una emergencia médica llama al <a href="tel:123">123</a>. Toca 🔊 para escuchar cada guía.</p>
+    <h2 class="titulo-seccion"><span class="ts-ico"><svg class="ic" aria-hidden="true"><use href="#i-cruz"></use></svg></span>Primeros auxilios</h2>
+    <p class="nota">Ante una emergencia médica llama al <a href="tel:123">123</a>. Toca el altavoz de cada guía para escucharla en voz alta.</p>
     <div id="listaAuxilios"><!-- lo llena app.js --></div>
     <p class="disclaimer" id="disclaimerAuxilios"></p>
   </section>
 
   <!-- ===== AYUDA ===== -->
   <section id="page-ayuda" class="page">
-    <h2 class="titulo-seccion">🎒 Tu casa lista para una emergencia <span class="badge-off" data-badge></span></h2>
+    <h2 class="titulo-seccion"><span class="ts-ico"><svg class="ic" aria-hidden="true"><use href="#i-tabla"></use></svg></span>Tu casa lista para una emergencia <span class="badge-off" data-badge></span></h2>
     <div class="tarjeta" id="checklistHogar">
       <div class="chk-progreso">
         <div class="chk-barra"><div id="chkBarraInterna"></div></div>
@@ -161,7 +215,7 @@
       <div id="chkLista"><!-- lo llena app.js --></div>
     </div>
 
-    <h2 class="titulo-seccion">👨‍👩‍👧 Plan familiar de emergencia <span class="badge-off" data-badge></span></h2>
+    <h2 class="titulo-seccion"><span class="ts-ico"><svg class="ic" aria-hidden="true"><use href="#i-contactos"></use></svg></span>Plan familiar de emergencia <span class="badge-off" data-badge></span></h2>
     <div class="tarjeta">
       <p class="nota" id="planNota">Llénalo con tu familia HOY, no cuando pase algo. Se guarda solo en tu teléfono.</p>
       <div class="ficha-form">
@@ -176,27 +230,27 @@
         </label>
       </div>
       <div class="fila-botones">
-        <button id="btnGuardarPlan" class="accion verde">💾 Guardar plan</button>
+        <button id="btnGuardarPlan" class="accion verde"><svg class="ic" aria-hidden="true"><use href="#i-guardar"></use></svg> Guardar plan</button>
       </div>
       <p class="nota" id="planConsejo"></p>
     </div>
 
-    <h2 class="titulo-seccion">🧰 Botiquín casero</h2>
+    <h2 class="titulo-seccion"><span class="ts-ico"><svg class="ic" aria-hidden="true"><use href="#i-botiquin"></use></svg></span>Botiquín casero</h2>
     <div class="tarjeta" id="listaBotiquin"><!-- lo llena app.js --></div>
 
-    <h2 class="titulo-seccion">🤝 Cómo ayudar a los más vulnerables</h2>
+    <h2 class="titulo-seccion"><span class="ts-ico"><svg class="ic" aria-hidden="true"><use href="#i-gente"></use></svg></span>Cómo ayudar a los más vulnerables</h2>
     <div id="listaVulnerables"><!-- lo llena app.js --></div>
 
-    <h2 class="titulo-seccion">💧 Agua segura y alimentos</h2>
+    <h2 class="titulo-seccion"><span class="ts-ico"><svg class="ic" aria-hidden="true"><use href="#i-agua"></use></svg></span>Agua segura y alimentos</h2>
     <div class="tarjeta" id="listaAgua"><!-- lo llena app.js --></div>
 
-    <h2 class="titulo-seccion">❤️ Cómo donar de verdad</h2>
+    <h2 class="titulo-seccion"><span class="ts-ico"><svg class="ic" aria-hidden="true"><use href="#i-corazon"></use></svg></span>Cómo donar de verdad</h2>
     <div class="tarjeta" id="donar"><!-- lo llena app.js --></div>
 
-    <h2 class="titulo-seccion">🛑 Cuidado con estafas y noticias falsas</h2>
+    <h2 class="titulo-seccion"><span class="ts-ico"><svg class="ic" aria-hidden="true"><use href="#i-escudo"></use></svg></span>Cuidado con estafas y noticias falsas</h2>
     <div class="tarjeta" id="listaEstafas"><!-- lo llena app.js --></div>
 
-    <h2 class="titulo-seccion">📡 Fuentes oficiales</h2>
+    <h2 class="titulo-seccion"><span class="ts-ico"><svg class="ic" aria-hidden="true"><use href="#i-antena"></use></svg></span>Fuentes oficiales</h2>
     <div class="tarjeta" id="listaFuentes"><!-- lo llena app.js --></div>
     <div class="tip" id="tipJac"></div>
     <div class="aviso" id="tipRadio"></div>
@@ -204,24 +258,24 @@
 
   <!-- ===== MÁS ===== -->
   <section id="page-mas" class="page">
-    <h2 class="titulo-seccion">⚙️ Herramientas de supervivencia</h2>
+    <h2 class="titulo-seccion"><span class="ts-ico"><svg class="ic" aria-hidden="true"><use href="#i-herramientas"></use></svg></span>Herramientas de supervivencia</h2>
     <div class="fila-botones">
-      <button id="btnSilbato" class="accion azul">📣 Silbato SOS</button>
-      <button id="btnLuzSOS" class="accion amarillo">💡 Luz SOS</button>
+      <button id="btnSilbato" class="accion azul"><svg class="ic" aria-hidden="true"><use href="#i-silbato"></use></svg> Silbato SOS</button>
+      <button id="btnLuzSOS" class="accion amarillo"><svg class="ic" aria-hidden="true"><use href="#i-luz"></use></svg> Luz SOS</button>
     </div>
     <p class="nota">El silbato y la luz funcionan sin internet y ayudan a que te encuentren.</p>
 
-    <h2 class="titulo-seccion">💾 Mis datos</h2>
+    <h2 class="titulo-seccion"><span class="ts-ico"><svg class="ic" aria-hidden="true"><use href="#i-guardar"></use></svg></span>Mis datos</h2>
     <p class="nota">Todo se queda en este teléfono: la ficha médica, los contactos, el checklist y el plan. Si cambias de celular o borras los datos del navegador, se pierden. Exporta un respaldo y guárdalo donde sí puedas recuperarlo.</p>
     <div class="fila-botones">
-      <button id="btnExportarDatos" class="accion azul">⬇️ Exportar respaldo</button>
-      <button id="btnImportarDatos" class="accion verde">⬆️ Restaurar respaldo</button>
+      <button id="btnExportarDatos" class="accion azul"><svg class="ic" aria-hidden="true"><use href="#i-descarga"></use></svg> Exportar respaldo</button>
+      <button id="btnImportarDatos" class="accion verde"><svg class="ic" aria-hidden="true"><use href="#i-subida"></use></svg> Restaurar respaldo</button>
     </div>
     <label class="visualmente-oculto" for="archivoImportar">Archivo JSON de respaldo</label>
     <input type="file" id="archivoImportar" accept="application/json,.json" class="visualmente-oculto">
     <p class="nota" id="estadoRespaldo" aria-live="polite"></p>
 
-    <h2 class="titulo-seccion">👥 Tus contactos de emergencia</h2>
+    <h2 class="titulo-seccion"><span class="ts-ico"><svg class="ic" aria-hidden="true"><use href="#i-contactos"></use></svg></span>Tus contactos de emergencia</h2>
     <div class="tarjeta">
       <p class="nota">Agrega las personas que deben saber si te pasa algo (mamá, pareja, vecino, JAC). Se guarda solo en TU teléfono. Cuando toques el botón rojo grande de Inicio, el aviso con tu ubicación queda listo para enviarles.</p>
       <div id="listaContactos"></div>
@@ -234,12 +288,12 @@
         </label>
       </div>
       <div class="fila-botones">
-        <button id="btnAgregarContacto" class="accion verde">➕ Agregar contacto</button>
+        <button id="btnAgregarContacto" class="accion verde"><svg class="ic" aria-hidden="true"><use href="#i-mas"></use></svg> Agregar contacto</button>
       </div>
       <p class="nota" id="ctcNotaMax"></p>
     </div>
 
-    <h2 class="titulo-seccion">🏥 Ficha médica de emergencia (ICE) <span class="badge-off" data-badge></span></h2>
+    <h2 class="titulo-seccion"><span class="ts-ico"><svg class="ic" aria-hidden="true"><use href="#i-ficha"></use></svg></span>Ficha médica de emergencia (ICE) <span class="badge-off" data-badge></span></h2>
     <div class="tarjeta">
       <p class="nota">Se guarda solo en TU teléfono (privado, no se envía a ningún lado). Si no puedes hablar, quien te ayude puede verla en grande. También se adjunta a tu aviso de "Necesito ayuda".</p>
       <div class="ficha-form">
@@ -263,12 +317,12 @@
         </label>
       </div>
       <div class="fila-botones">
-        <button id="btnGuardarFicha" class="accion verde">💾 Guardar ficha</button>
-        <button id="btnVerFicha" class="accion azul">👁️ Ver ficha grande</button>
+        <button id="btnGuardarFicha" class="accion verde"><svg class="ic" aria-hidden="true"><use href="#i-guardar"></use></svg> Guardar ficha</button>
+        <button id="btnVerFicha" class="accion azul"><svg class="ic" aria-hidden="true"><use href="#i-ojo"></use></svg> Ver ficha grande</button>
       </div>
     </div>
 
-    <h2 class="titulo-seccion">👁️ Accesibilidad</h2>
+    <h2 class="titulo-seccion"><span class="ts-ico"><svg class="ic" aria-hidden="true"><use href="#i-ojo"></use></svg></span>Accesibilidad</h2>
     <div class="tarjeta ajustes">
       <div class="fila-ajuste">
         <span>Tamaño de letra</span>
@@ -287,20 +341,20 @@
         <button id="btnClaro" class="mini">Activar</button>
       </div>
       <div class="fila-ajuste">
-        <span>🕊️ Mensajes de esperanza</span>
+        <span><svg class="ic" aria-hidden="true"><use href="#i-pajaro"></use></svg> Mensajes de esperanza</span>
         <button id="btnEsperanza" class="mini">Activar</button>
       </div>
       <p class="nota" id="esperanzaNota"></p>
     </div>
 
-    <h2 class="titulo-seccion">📲 Instalar en tu celular</h2>
+    <h2 class="titulo-seccion"><span class="ts-ico"><svg class="ic" aria-hidden="true"><use href="#i-instalar"></use></svg></span>Instalar en tu celular</h2>
     <div class="tarjeta">
       <p>Instala esta app para tenerla siempre a mano, incluso sin internet.</p>
-      <button id="btnInstalar" class="accion azul">⬇️ Instalar app</button>
+      <button id="btnInstalar" class="accion azul"><svg class="ic" aria-hidden="true"><use href="#i-instalar"></use></svg> Instalar app</button>
       <p class="nota" id="instruccionesInstalar">En el navegador: menú (⋮) → "Agregar a pantalla de inicio" o "Instalar aplicación".</p>
     </div>
 
-    <h2 class="titulo-seccion">ℹ️ Acerca de</h2>
+    <h2 class="titulo-seccion"><span class="ts-ico"><svg class="ic" aria-hidden="true"><use href="#i-candado"></use></svg></span>Acerca de</h2>
     <div class="tarjeta" id="acerca"><!-- lo llena app.js --></div>
   </section>
 
@@ -308,11 +362,11 @@
 
 <!-- ============ NAVEGACIÓN INFERIOR ============ -->
 <nav id="navInferior" aria-label="Navegación principal">
-  <button class="nav-btn activo" data-page="inicio"><span class="nav-ico">🏠</span><span class="nav-txt">Inicio</span></button>
-  <button class="nav-btn" data-page="emergencias"><span class="nav-ico">🚨</span><span class="nav-txt">Emerg.</span></button>
-  <button class="nav-btn" data-page="auxilios"><span class="nav-ico">⛑️</span><span class="nav-txt">Auxilios</span></button>
-  <button class="nav-btn" data-page="ayuda"><span class="nav-ico">🤝</span><span class="nav-txt">Ayuda</span></button>
-  <button class="nav-btn" data-page="mas"><span class="nav-ico">⚙️</span><span class="nav-txt">Más</span></button>
+  <button class="nav-btn activo" data-page="inicio"><span class="nav-ico"><svg class="ic" aria-hidden="true"><use href="#i-inicio"></use></svg></span><span class="nav-txt">Inicio</span></button>
+  <button class="nav-btn" data-page="emergencias"><span class="nav-ico"><svg class="ic" aria-hidden="true"><use href="#i-sirena"></use></svg></span><span class="nav-txt">Emerg.</span></button>
+  <button class="nav-btn" data-page="auxilios"><span class="nav-ico"><svg class="ic" aria-hidden="true"><use href="#i-cruz"></use></svg></span><span class="nav-txt">Auxilios</span></button>
+  <button class="nav-btn" data-page="ayuda"><span class="nav-ico"><svg class="ic" aria-hidden="true"><use href="#i-gente"></use></svg></span><span class="nav-txt">Ayuda</span></button>
+  <button class="nav-btn" data-page="mas"><span class="nav-ico"><svg class="ic" aria-hidden="true"><use href="#i-ajustes"></use></svg></span><span class="nav-txt">Más</span></button>
 </nav>
 
 <!-- ============ CHOOSER DE CANAL (WhatsApp / SMS) ============ -->
@@ -321,8 +375,8 @@
     <p class="chooser-titulo">¿Por dónde?</p>
     <p id="chooserDestino" class="chooser-destino oculto"></p>
     <p class="chooser-explica" id="chooserExplica"></p>
-    <button id="chooserWhatsApp" class="chooser-grande wa"><span>💬</span> WhatsApp<small>rápido, con internet</small></button>
-    <button id="chooserSMS" class="chooser-grande sms"><span>✉️</span> SMS<small>funciona sin internet</small></button>
+    <button id="chooserWhatsApp" class="chooser-grande wa"><span class="cg-ico"><svg class="ic" aria-hidden="true"><use href="#i-whatsapp"></use></svg></span> WhatsApp<small>rápido, con internet</small></button>
+    <button id="chooserSMS" class="chooser-grande sms"><span class="cg-ico"><svg class="ic" aria-hidden="true"><use href="#i-sobre"></use></svg></span> SMS<small>funciona sin internet</small></button>
     <button id="chooserCancelar" class="chooser-cancelar">Cancelar</button>
   </div>
 </div>
@@ -339,15 +393,15 @@
 <!-- ============ OVERLAY FICHA MÉDICA GRANDE (para quien te ayuda) ============ -->
 <div id="overlayFicha" class="oculto" role="dialog" aria-modal="true" aria-label="Ficha médica de emergencia">
   <div class="ficha-grande">
-    <h2 class="fg-titulo">🏥 FICHA MÉDICA</h2>
+    <h2 class="fg-titulo"><svg class="ic" aria-hidden="true"><use href="#i-ficha"></use></svg> FICHA MÉDICA</h2>
     <div id="fichaGrandeContenido"></div>
-    <button id="cerrarFicha" class="accion rojo">✕ Cerrar</button>
+    <button id="cerrarFicha" class="accion rojo"><svg class="ic" aria-hidden="true"><use href="#i-x"></use></svg> Cerrar</button>
   </div>
 </div>
 
 <!-- ============ OVERLAY LUZ SOS ============ -->
 <div id="overlayLuz" class="oculto" role="dialog" aria-modal="true" aria-label="Luz SOS activada">
-  <button id="cerrarLuz" class="btn-cerrar-luz">✕ Detener luz SOS</button>
+  <button id="cerrarLuz" class="btn-cerrar-luz"><svg class="ic" aria-hidden="true"><use href="#i-x"></use></svg> Detener luz SOS</button>
 </div>
 
 <!-- ============ TOAST (avisos) ============ -->

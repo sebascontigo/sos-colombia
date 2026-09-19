@@ -107,6 +107,75 @@ function ruta(){
 window.addEventListener("hashchange", ruta);
 
 /* ============================================================
+   ICONOS — el sistema de la app
+   ------------------------------------------------------------
+   Los emojis que llegan de datos (tipos de SOS, checklist, accesos,
+   fichas) se convierten a su icono SVG dibujado al renderizar, para
+   que la interfaz tenga UN sistema de iconos y no una colección de
+   glifos de plataforma. El emoji de la prosa (avisos, toasts, frases)
+   se queda: ahí es texto, no icono.
+   ============================================================ */
+var EMOJI_ICONO={};
+(function(){
+  var m=[
+    ["\u{1F3DA}\uFE0F","casa"],["\u{1F3E0}","casa"],["\u{1F4A7}","agua"],["\u{1F30A}","agua"],
+    ["\u{1F4DE}","telefono"],["\u26D1\uFE0F","cruz"],["\u{1F4E3}","silbato"],["\u{1F4A1}","luz"],
+    ["\u{1F91D}","gente"],["\u{1F6D1}","escudo"],["\u{1F4E1}","antena"],["\u{1F198}","alerta"],
+    ["\u2705","check"],["\u{1F50A}","voz"],["\u{1F4CD}","pin"],["\u{1F3E5}","ficha"],["\u{1F465}","contactos"],
+    ["\u{1F4AC}","whatsapp"],["\u2709\uFE0F","sobre"],["\u{1F5D1}\uFE0F","basura"],["\u26A0\uFE0F","alerta"],
+    ["\u{1FA7A}","ficha"],["\u{1F48A}","botiquin"],["\u2699\uFE0F","ajustes"],["\u{1F4BE}","guardar"],
+    ["\u{1F4CB}","tabla"],["\u{1F54A}\uFE0F","pajaro"],["\u{1F4F2}","instalar"],["\u{1F525}","alerta"],
+    ["\u{1F6A8}","sirena"],["\u{1F447}","descarga"],["\u2B06\uFE0F","subida"],["\u2B07\uFE0F","descarga"],
+    ["\u2795","mas"],["\u{1F4D6}","brujula"],["\u{1F534}","sirena"],["\u{1F3D8}\uFE0F","casa"],
+    ["\u{1F4FB}","radio"],["\u{1F512}","candado"],["\u{1F635}","alerta"],["\u{1F4F6}","antena"],
+    ["\u23F9\uFE0F","detener"],["\u{1F504}","antena"],["\u{1F468}\u200D\u{1F469}\u200D\u{1F467}","contactos"],
+    ["\u{1F64F}","pajaro"],["\u{1FA79}","ficha"],["\u{1F6C2}","instalar"],["\u2716\uFE0F","x"],["\u274C","x"],
+    ["\u{1F9BA}","cinturon"],["\u{1F392}","tabla"],["\u{1F46A}","contactos"],["\u2764\uFE0F","corazon"],
+    ["\u{1F9D1}\u200D\u{1F91D}\u200D\u{1F9D1}","gente"],["\u{1F3E9}","casa"],["\u{1F6BF}","alerta"],
+    ["\u{1F697}","coche"],["\u{1F525}","fuego"],["\u{1FA7A}","cruz"],["\u{1F9EF}","ficha"],["\u{1FA7A}","ficha"],["\u{1F489}","botiquin"],["\u{1FA7A}","ficha"]
+  ];
+  m.forEach(function(par){ EMOJI_ICONO[par[0]]=par[1]; });
+})();
+function icSVG(nombre, extra){
+  return '<svg class="ic'+(extra?" "+extra:"")+'" aria-hidden="true" focusable="false"><use href="#i-'+nombre+'"></use></svg>';
+}
+// Un emoji al principio de un texto de interfaz  →  su icono dibujado.
+function iconizar(raiz){
+  if(!document.getElementById("i-inicio")) return 0;      // sin sprite, no hay nada que hacer
+  var walker=document.createTreeWalker(raiz||document.body, NodeFilter.SHOW_TEXT, {
+    acceptNode:function(n){
+      var v=n.nodeValue;
+      if(!v||!/^\s*[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B06}\u{2B07}\u{2705}\u{274C}\u{2795}\u{23F9}]/u.test(v)) return NodeFilter.FILTER_REJECT;
+      var el=n.parentElement;
+      if(!el||el.closest(".sr-only,#toast,.frase-esperanza,script,style,textarea")) return NodeFilter.FILTER_REJECT;
+      return NodeFilter.FILTER_ACCEPT;
+    }
+  });
+  var nodo, hechos=0;
+  while((nodo=walker.nextNode()) && hechos<400){
+    var v=nodo.nodeValue;
+    var hueco=/^\s*/.exec(v)[0];
+    var recortado=v.slice(hueco.length);
+    var em=null, nombre=null;
+    // 8,6,4,3,2,1 caracteres: hay emojis con ZWJ, con variador de texto y sueltos
+    [8,6,4,3,2,1].some(function(largo){
+      var cand=recortado.slice(0,largo);
+      if(EMOJI_ICONO[cand]){ em=cand; nombre=EMOJI_ICONO[cand]; return true; }
+      return false;
+    });
+    if(!nombre) continue;
+    if(hueco) nodo.parentNode.insertBefore(document.createTextNode(hueco), nodo);
+    var span=document.createElement("span");
+    span.className="ico-ui";
+    span.innerHTML=icSVG(nombre);
+    nodo.parentNode.insertBefore(span, nodo);
+    nodo.nodeValue=recortado.slice(em.length);
+    hechos++;
+  }
+  return hechos;
+}
+
+/* ============================================================
    VOZ (TTS) — accesibilidad estrella
    ============================================================ */
 var soportaVoz = ("speechSynthesis" in window);
@@ -830,7 +899,7 @@ function renderChecklist(){
   $("chkLista").innerHTML=html;
   var total=DATOS.preparacion.items.length;
   var hechos=DATOS.preparacion.items.filter(function(it){ return !!CHECK[it.id]; }).length;
-  $("chkBarraInterna").style.width=(total?Math.round(hechos*100/total):0)+"%";
+  $("chkBarraInterna").style.setProperty("--pct", total?(hechos/total):0);   // scaleX, no layout
   var txt;
   if(hechos===total){ txt=DATOS.preparacion.todoListo; }
   else if(hechos===0){ txt=DATOS.preparacion.empieza; }
@@ -1230,6 +1299,7 @@ function renderTodo(){
   renderNacionales(); renderDesastres(); renderCiudades(""); renderAtrapado();
   renderAuxilios(); renderVulnerables(); renderAyudaExtra(); renderAcerca(); renderAccesos();
   renderChecklist(); triajePaso("inicio"); svRenderChips();
+  iconizar(document.body);   // los emojis del contenido pasan a ser iconos dibujados
   // humanidad v4.3: disclaimers + badges offline + nota esperanza
   var d1=$("disclaimerInicio"); if(d1) d1.textContent=DATOS.humanidad.disclaimer;
   var d2=$("disclaimerAuxilios"); if(d2) d2.textContent=DATOS.humanidad.disclaimer;

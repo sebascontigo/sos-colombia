@@ -104,7 +104,7 @@ body.claro #topbar{
   width:42px; height:42px; border-radius:13px; font-size:1.35rem;
   background:linear-gradient(135deg, var(--rojo), var(--rojo-osc));
   border:1px solid rgba(212,175,55,.35);
-  box-shadow:0 4px 14px rgba(192,57,43,.45), inset 0 1px 0 rgba(255,255,255,.25), 0 0 12px rgba(212,175,55,.15);
+  box-shadow:0 4px 14px rgba(192,57,43,.45), inset 0 1px 0 rgba(255,255,255,.25);
 }
 .topbar-text{flex:1; line-height:1.15}
 .topbar-text strong, .topbar-text h1{font-size:1rem; letter-spacing:.3px}
@@ -133,11 +133,7 @@ body.claro .icon-btn{background:rgba(20,32,46,.05)}
   color:var(--texto-suave);
   margin:20px 0 10px;
 }
-.titulo-seccion::before{
-  content:""; flex:0 0 auto; width:4px; height:1.15em; border-radius:3px;
-  background:linear-gradient(180deg, var(--oro-claro), var(--oro), var(--oro-oscuro));
-  box-shadow:0 0 10px rgba(212,175,55,.5);
-}
+/* el marcador del título es su mosaico; la raya con halo dorado fuera */
 .nota{font-size:.85rem; color:var(--texto-suave); margin:8px 0}
 .nota a{color:var(--azul)}
 
@@ -199,8 +195,8 @@ body.claro .icon-btn{background:rgba(20,32,46,.05)}
 body.claro .tarjeta, body.claro .tip, body.claro .aviso{
   background:linear-gradient(180deg, #ffffff, #fbfcfe);
 }
-.tip{border-left:4px solid var(--verde)}
-.aviso{border-left:4px solid var(--amarillo)}
+.tip{border-left-width:1px}
+.aviso{border-left-width:1px}
 .tarjeta ul{margin:0 0 0 20px}
 .tarjeta li{margin-bottom:7px}
 .tarjeta p{margin-bottom:8px}
@@ -326,7 +322,7 @@ p a[href^="tel:"], li a[href^="tel:"]{
   content:""; position:absolute; top:0; left:12%; right:12%; height:1.5px;
   background:linear-gradient(90deg, transparent, rgba(212,175,55,.55), transparent);
 }
-.nav-btn.activo .nav-ico{filter:drop-shadow(0 0 8px rgba(212,175,55,.45))}
+.nav-btn.activo .nav-ico{transform:translateY(-2px)}
 #navInferior{
   position:fixed; bottom:0; left:0; right:0; z-index:60;
   display:flex;
@@ -355,7 +351,7 @@ body.claro #navInferior{
   transition:transform .22s ease;
 }
 .nav-btn .nav-ico{font-size:1.4rem; transition:transform .18s ease}
-.nav-btn .nav-txt{font-size:.68rem; font-weight:700; letter-spacing:.2px}
+.nav-btn .nav-txt{font-size:.8rem; font-weight:700; letter-spacing:.01em}
 .nav-btn.activo{
 color:var(--oro)}
 .nav-btn.activo::before{transform:translateX(-50%) scaleX(1)}
@@ -468,10 +464,11 @@ body.claro .ubic-coords{color:var(--oro-oscuro)}
   box-shadow:0 18px 54px rgba(0,0,0,.55);
 }
 .fg-titulo{
-  font-size:1.35rem; text-align:center; margin-bottom:14px;
-  background:linear-gradient(90deg, var(--oro-claro), var(--oro), var(--oro-oscuro));
-  -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+  font-size:var(--t-2xl); text-align:center; margin-bottom:14px;
+  color:var(--oro-claro); font-weight:900; letter-spacing:.06em;
 }
+body.claro .fg-titulo{ color:#6b4e14 }
+body.contraste .fg-titulo{ color:#ffd600 }
 .fg-nombre{font-size:1.7rem; font-weight:900; text-align:center; margin-bottom:12px}
 .fg-item{font-size:1.25rem; line-height:1.5; padding:11px 0; border-bottom:1px solid var(--borde)}
 .fg-item strong{font-size:1.5rem; color:var(--rojo)}
@@ -529,9 +526,10 @@ body.claro .rcp-fase{color:var(--oro-oscuro)}
 }
 body.claro .chk-barra{background:rgba(20,32,46,.08)}
 #chkBarraInterna{
-  height:100%; width:0%;
+  height:100%; width:100%;
+  transform:scaleX(var(--pct,0)); transform-origin:left center;
   background:linear-gradient(90deg, var(--oro-oscuro), var(--oro), var(--oro-claro));
-  transition:width .4s ease;
+  transition:transform .42s cubic-bezier(.2,.8,.25,1);
 }
 #chkTexto{font-size:.85rem; font-weight:800; color:var(--texto-suave); white-space:nowrap}
 .chk-item{
@@ -661,7 +659,7 @@ body.claro .chk-barra{background:rgba(20,32,46,.08)}
 .sv-flash{
   outline:3px solid var(--rojo);
   outline-offset:2px;
-  box-shadow:0 0 0 3px rgba(231,76,60,.35), 0 0 40px rgba(231,76,60,.45);
+  box-shadow:0 0 0 3px rgba(231,76,60,.35);
 }
 .sv-chips{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px}
 .sv-chip{
@@ -817,3 +815,125 @@ a{color:var(--azul)}
 /* Área tátil del chip sin agrandarlo visualmente: WCAG 2.5.5 permite ampliar
    el objetivo por encima del borde visible. */
 .sv-chip::after{content:""; position:absolute; inset:-4px -3px; border-radius:999px}
+
+/* ============================================================
+   CAPA DE DISEÑO v4.6 — de "app con emojis" a sistema
+   ------------------------------------------------------------
+   Todo lo de arriba sigue vigente; aquí se refina la ejecución:
+   iconos dibujados con un solo trazo, escala tipográfica real,
+   ritmo de espacios, llamadas de atención sin franjas de color,
+   y las superficies del navegador (selección, cursor, barra de
+   scroll, subrayado) themeadas con la paleta en vez de dejarlas
+   en su valor por defecto.
+   ============================================================ */
+:root{
+  /* escala tipográfica: pasos visibles, no derivas de px */
+  --t-xs:.72rem; --t-sm:.82rem; --t-base:1rem; --t-lg:1.12rem;
+  --t-2xl:1.9rem; --t-3xl:3rem;
+  /* ritmo vertical: más aire ABOVE un título que debajo (regla de composición) */
+  --y-2:10px; --y-3:16px; --y-4:22px; --y-5:32px;
+  --trazo:1.7;
+}
+
+/* ---------- 1 · iconos ---------- */
+.sprite{display:none!important}
+.ic{
+  width:1.28em; height:1.28em; flex:0 0 auto; vertical-align:-.24em;
+  fill:none; stroke:currentColor; stroke-width:var(--trazo);
+  stroke-linecap:round; stroke-linejoin:round;
+}
+.ico-ui{display:inline-flex; align-items:center}
+.nav-btn .ic{width:23px; height:23px; stroke-width:1.6}
+.p-ico .ic, .ts-ico .ic, .cg-ico .ic, .item-cab .ico .ic, .chk-ico .ic{width:20px; height:20px}
+.accion .ic, .btn-voz .ic, .mini .ic, .btn-cerrar-luz .ic, .btn-metronomo .ic,
+.sosvivo-activar .ic, .chooser-grande .ic{width:1.35em; height:1.35em; stroke-width:1.9}
+.accion, .btn-voz, .mini, .sosvivo-activar, .btn-metronomo{
+  display:inline-flex; align-items:center; justify-content:center; gap:.5em; text-align:center;
+}
+.accion{ letter-spacing:.005em }
+.chooser-grande{display:flex; align-items:center; justify-content:center; gap:.5em}
+.cg-ico{display:inline-flex}
+/* el logo deja de ser un emoji de plataforma: pasa a ser una marca escrita,
+   sobre el rojo AA-seguro de la app (blanco sobre él mide 4,7:1) */
+.logo{
+  font-weight:900; letter-spacing:.08em; font-size:.8rem; line-height:1;
+  display:inline-flex; align-items:center; justify-content:center;
+  background:var(--grad-rojo); color:#fff;
+  border-color:rgba(212,175,55,.42);
+}
+
+/* ---------- 2 · tipografía y jerarquía ---------- */
+.titulo-seccion{
+  display:flex; align-items:center; gap:10px;
+  font-size:var(--t-lg); font-weight:800; letter-spacing:-.015em; line-height:1.25;
+  margin:var(--y-5) 0 var(--y-2); text-wrap:balance; text-transform:none;
+}
+/* la barra dorada de la izquierda sobraba en cuanto el título tuvo su marca */
+.titulo-seccion::before{display:none}
+.titulo-seccion .ts-ico{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:30px; height:30px; flex:0 0 auto; border-radius:10px;
+  color:var(--oro-claro);
+  background:linear-gradient(150deg, rgba(212,175,55,.22), rgba(212,175,55,.05));
+  border:1px solid rgba(212,175,55,.28);
+  box-shadow:0 3px 10px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.10);
+}
+body.claro .titulo-seccion .ts-ico{
+  color:#6b4e14; background:linear-gradient(150deg, rgba(212,175,55,.20), rgba(212,175,55,.06));
+  border-color:rgba(160,120,20,.30); box-shadow:0 2px 8px rgba(20,32,46,.10);
+}
+body.contraste .titulo-seccion .ts-ico{background:#000; border-color:#ffd600; color:#ffd600}
+h1,h2,h3{ text-wrap:balance }
+.nota, .p-nota{ font-size:var(--t-sm); line-height:1.55; color:var(--texto-suave) }
+.sos-num{ font-size:var(--t-3xl); font-variant-numeric:tabular-nums; letter-spacing:-.03em }
+.fg-titulo{ font-size:var(--t-2xl); letter-spacing:.02em }
+.num, .llamada .num{ font-variant-numeric:tabular-nums }
+.p-fila strong{ font-size:var(--t-base); letter-spacing:-.005em }
+.p-fila small, .ctc-datos small, .item-cab small{ font-size:var(--t-xs); letter-spacing:.01em }
+
+/* ---------- 3 · ritmo ---------- */
+#contenido{ padding-top:var(--y-4) }
+.page{ padding-bottom:var(--y-5) }
+.tarjeta, .tip, .aviso{ margin-bottom:var(--y-3) }
+.fila-botones{ gap:var(--y-2); margin:var(--y-3) 0 }
+.item-acordeon{ margin-bottom:var(--y-2) }
+
+/* ---------- 4 · llamadas de atención sin franja de color ---------- */
+/* La franja de 4px a la izquierda es el recurso por defecto de la IA; aquí el
+   aviso se reconoce por su superficie tintada y su marca, no por una raya. */
+.tip, .aviso{
+  border:1px solid var(--borde); border-left:1px solid var(--borde);
+  position:relative; padding-left:44px;
+}
+.tip::after, .aviso::after{
+  content:""; position:absolute; left:0; top:0; bottom:0; width:34px;
+  border-radius:var(--radio) 0 0 var(--radio); opacity:.16;
+}
+.tip::after{ background:linear-gradient(180deg, var(--verde), transparent 78%) }
+.aviso::after{ background:linear-gradient(180deg, var(--amarillo), transparent 78%) }
+body.contraste .tip::after, body.contraste .aviso::after{ opacity:.35 }
+
+/* ---------- 5 · superficies del navegador ---------- */
+::selection{ background:rgba(212,175,55,.32); color:var(--texto) }
+body.claro ::selection{ background:rgba(160,120,20,.26); color:#14202e }
+input, textarea, select{ caret-color:var(--oro) }
+input::placeholder, textarea::placeholder{ color:var(--texto-suave); opacity:.9 }
+a{ text-underline-offset:3px; text-decoration-thickness:1.5px }
+*{ scrollbar-width:thin; scrollbar-color:rgba(212,175,55,.42) transparent }
+::-webkit-scrollbar{ width:9px; height:9px }
+::-webkit-scrollbar-track{ background:transparent }
+::-webkit-scrollbar-thumb{ background:rgba(212,175,55,.34); border-radius:99px }
+::-webkit-scrollbar-thumb:hover{ background:rgba(212,175,55,.52) }
+
+/* ---------- 6 · un solo momento de movimiento, y su respeto ---------- */
+@keyframes aparecerIco{ from{ opacity:0; transform:translateY(7px) scale(.94) } to{ opacity:1; transform:none } }
+.page.activa .ts-ico{ animation:aparecerIco .42s cubic-bezier(.2,.8,.25,1) both }
+.page.activa .p-bloque, .page.activa .tarjeta{ animation:aparecer .3s cubic-bezier(.2,.8,.25,1) both }
+@media (prefers-reduced-motion: reduce){
+  *, *::before, *::after{ animation-duration:.001ms!important; animation-iteration-count:1!important; transition-duration:.001ms!important }
+}
+
+/* ---------- 7 · navegación: el estado activo se ve en el peso, no solo en el color ---------- */
+.nav-btn.activo .nav-txt{ font-weight:900 }
+.nav-btn .nav-ico{ display:inline-flex; align-items:center; justify-content:center }
+.nav-btn.activo .nav-ico .ic{ stroke-width:2.1 }

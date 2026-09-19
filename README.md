@@ -5,7 +5,7 @@ que viaja en el aviso por WhatsApp, checklist del hogar y plan familiar. Funcion
 internet** (service worker), no crea cuentas, no sube datos: todo se queda en el teléfono.
 
 **Usarla:** https://sebascontigo.github.io/sos-colombia/  ·  se puede instalar desde el menú del navegador (\"Añadir a pantalla de inicio\").
-**Versión servida:** 4.5.0 · caché sos-colombia-v28.
+**Versión servida:** 4.6.0 · caché sos-colombia-v29.
 
 **No edites este repo a mano.** El fuente vive en el proyecto ColombAI
 (`ColombAI_SOS_Colombia/cosas/C-001-web-emergencia`) y aquí solo llega lo verificado por

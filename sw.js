@@ -39,7 +39,7 @@
    - la sirena visual vuelve a existir: apuntaba a un id que no estaba en el DOM.
    - esc() cubre comillas (atributos) y la luz SOS es idempotente.
    - si el teléfono no deja guardar, ahora se avisa en vez de perder el dato. */
-var CACHE = "sos-colombia-v28";
+var CACHE = "sos-colombia-v29";
 var ARCHIVOS = [
   "./",
   "./index.html",
